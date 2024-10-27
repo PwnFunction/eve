@@ -10,17 +10,40 @@ import {
   useEdgesState,
   useNodesState,
   type Connection,
+  type Edge,
+  type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
+import { EventStream, Generic } from "./blocks";
 
-const initialNodes = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "Event Stream" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "Queue" } },
-  { id: "3", position: { x: 100, y: 200 }, data: { label: "Process" } },
+const initialNodes: Node[] = [
+  {
+    id: "1",
+    position: { x: 0, y: 0 },
+    data: { label: "Event Stream", frequency: 1000 },
+    type: "EventStream",
+  },
+  {
+    id: "2",
+    position: { x: 0, y: 100 },
+    data: { label: "Queue" },
+    type: "Generic",
+  },
+  {
+    id: "3",
+    position: { x: 100, y: 200 },
+    data: { label: "Process" },
+    type: "Generic",
+  },
 ];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2", animated: true }];
+
+const initialEdges: Edge[] = [
+  { id: "e1-2", source: "1", target: "2", animated: true },
+];
+
 const proOptions = { hideAttribution: true };
+
 const fitViewOptions = {
   padding: 0.2,
   minZoom: 1,
@@ -30,6 +53,7 @@ const fitViewOptions = {
 export const Canvas = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const nodeTypes = useMemo(() => ({ EventStream, Generic }), []);
 
   const onConnect = useCallback(
     (connection: Connection) => {
@@ -49,6 +73,7 @@ export const Canvas = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
         fitView={true}
         fitViewOptions={fitViewOptions}
         defaultViewport={{ zoom: 1, x: 0, y: 0 }}
