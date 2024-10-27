@@ -26,13 +26,13 @@ const initialNodes: Node[] = [
   },
   {
     id: "2",
-    position: { x: 0, y: 100 },
+    position: { x: 300, y: -100 },
     data: { label: "Queue" },
     type: "Generic",
   },
   {
     id: "3",
-    position: { x: 100, y: 200 },
+    position: { x: 500, y: 0 },
     data: { label: "Process" },
     type: "Generic",
   },
@@ -78,7 +78,13 @@ export const Canvas = () => {
         fitViewOptions={fitViewOptions}
         defaultViewport={{ zoom: 1, x: 0, y: 0 }}
       >
-        <Panel position="top-left">Canvas</Panel>
+        <Panel
+          position="bottom-right"
+          className="font-mono text-xs text-neutral-500"
+        >
+          {nodes.length} {nodes.length > 1 ? "Nodes" : "Node"}, {edges.length}{" "}
+          {edges.length > 1 ? "Connections" : "Connection"}
+        </Panel>
         <Background color="#999" variant={BackgroundVariant.Dots} />
       </ReactFlow>
     </section>
