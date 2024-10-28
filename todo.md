@@ -1,5 +1,4 @@
 - [ ] add selected node styles
-- [ ] cross selection from layers to canvas and vice versa
-- [ ] show selected node's properties in inspector
 - [ ] remove drag shadow
 - [ ] multi selection inspector
+- [ ] inspector show connected nodes by filtering on edges

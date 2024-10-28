@@ -1,34 +1,19 @@
 "use client";
 
+import { useSelectedElements } from "@/hooks/use-selected-elements";
+import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
-import {
-  type Edge,
-  type Node,
-  useNodes,
-  useOnSelectionChange,
-} from "@xyflow/react";
-import { useCallback, useState } from "react";
+import { type Edge, type Node } from "@xyflow/react";
 import { Input } from "./ui/input";
 import { Kbd } from "./ui/kbd";
 import { Label } from "./ui/label";
 
 export const Inspector = () => {
-  const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
-  const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
-
-  const nodes = useNodes();
-
-  const onChange = useCallback(
-    ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
-      setSelectedNodes(nodes.map((node) => node.id.toString()));
-      setSelectedEdges(edges.map((edge) => edge.id.toString()));
-    },
-    [],
+  const { selectedNodes, selectedEdges } = useSelection();
+  const { selectedNodeElements, selectedEdgeElements } = useSelectedElements(
+    selectedNodes,
+    selectedEdges,
   );
-
-  useOnSelectionChange({
-    onChange,
-  });
 
   return (
     <aside
@@ -39,15 +24,15 @@ export const Inspector = () => {
 
       {selectedNodes.length > 0 ? (
         <div>
-          {selectedNodes.map((id) => {
-            const node = nodes.find((node) => node.id === id);
-
-            if (!node) {
-              return null;
-            }
-
-            return <NodeInspector key={node.id} node={node} />;
-          })}
+          {selectedNodeElements.map((node) => (
+            <NodeInspector key={node.id} node={node} />
+          ))}
+        </div>
+      ) : selectedEdges.length > 0 ? (
+        <div>
+          {selectedEdgeElements.map((edge) => (
+            <EdgeInspector key={edge.id} edge={edge} />
+          ))}
         </div>
       ) : (
         <p className="text-neutral-500">
@@ -59,10 +44,14 @@ export const Inspector = () => {
   );
 };
 
+// NodeInspector and EdgeInspector components remain the same
+
 const NodeInspector = ({ node }: { node: Node }) => {
   return (
     <div>
-      <pre className="text-neutral-500">{JSON.stringify(node, null, 2)}</pre>
+      <pre className="w-[400px] overflow-x-auto text-neutral-500">
+        {JSON.stringify(node, null, 2)}
+      </pre>
 
       <div className="space-y-2">
         {/* Type */}
@@ -82,6 +71,40 @@ const NodeInspector = ({ node }: { node: Node }) => {
 
           <Input
             value={node.id}
+            readOnly
+            className="w-fit cursor-not-allowed"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const EdgeInspector = ({ edge }: { edge: Edge }) => {
+  return (
+    <div>
+      <pre className="w-[400px] overflow-x-auto text-neutral-500">
+        {JSON.stringify(edge, null, 2)}
+      </pre>
+
+      <div className="space-y-2">
+        {/* Source */}
+        <div className="flex items-center justify-between">
+          <Label>Source</Label>
+
+          <Input
+            value={edge.source}
+            readOnly
+            className="w-fit cursor-not-allowed"
+          />
+        </div>
+
+        {/* Target */}
+        <div className="flex items-center justify-between">
+          <Label>Target</Label>
+
+          <Input
+            value={edge.target}
             readOnly
             className="w-fit cursor-not-allowed"
           />
