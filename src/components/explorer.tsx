@@ -7,7 +7,10 @@ export const Explorer = () => {
   };
 
   return (
-    <section className="border-t border-neutral-200" style={styles.bottomPanel}>
+    <section
+      className="border-t border-neutral-200 p-2"
+      style={styles.bottomPanel}
+    >
       <p>Explorer</p>
       <div className="space-y-2">
         <div

@@ -4,35 +4,40 @@ import { Canvas } from "@/components/canvas";
 import { Explorer } from "@/components/explorer";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { Layers } from "@/components/layers";
 import { styles } from "@/lib/styles/layout";
+import { ReactFlowProvider } from "@xyflow/react";
 
 export default function Home() {
   return (
-    <main
-      className="grid min-h-screen border border-green-500 text-sm"
-      style={styles.parent}
-    >
-      {/* Header */}
-      <Header />
+    <ReactFlowProvider>
+      <main
+        className="grid min-h-screen border border-green-500 text-sm"
+        style={styles.parent}
+      >
+        {/* Header */}
+        <Header />
 
-      {/* Layers */}
-      <aside className="border-r border-neutral-200" style={styles.leftPanel}>
-        Layers
-      </aside>
+        {/* Layers */}
+        <Layers />
 
-      {/* Canvas */}
-      <Canvas />
+        {/* Canvas */}
+        <Canvas />
 
-      {/* Explorer */}
-      <Explorer />
+        {/* Explorer */}
+        <Explorer />
 
-      {/* Inspector */}
-      <aside className="border-l border-neutral-200" style={styles.rightPanel}>
-        Inspector
-      </aside>
+        {/* Inspector */}
+        <aside
+          className="border-l border-neutral-200 p-2"
+          style={styles.rightPanel}
+        >
+          Inspector
+        </aside>
 
-      {/* Footer */}
-      <Footer />
-    </main>
+        {/* Footer */}
+        <Footer />
+      </main>
+    </ReactFlowProvider>
   );
 }
