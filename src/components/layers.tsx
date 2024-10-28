@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
@@ -31,14 +37,21 @@ export const Layers = () => {
           </Kbd>
         </p>
 
-        {selectedNodes.length > 1 && (
-          <button
-            className="text-neutral-500 hover:text-neutral-600"
-            onClick={clearSelection}
-          >
-            <X size={12} />
-          </button>
-        )}
+        <TooltipProvider>
+          {selectedNodes.length > 1 && (
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger>
+                <button
+                  className="text-neutral-500 hover:text-neutral-600"
+                  onClick={clearSelection}
+                >
+                  <X size={12} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Clear selection</TooltipContent>
+            </Tooltip>
+          )}
+        </TooltipProvider>
       </div>
 
       <div className="space-y-0.5">
