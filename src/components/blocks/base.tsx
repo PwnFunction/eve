@@ -12,14 +12,22 @@ export const Base = ({
   return (
     <div
       className={cn(
-        "border bg-neutral-50 px-4 py-2 active:bg-neutral-100",
+        "w-fit border bg-neutral-50 px-4 py-2 active:bg-neutral-100",
         className,
       )}
       {...props}
     >
-      <Handle type="target" position={Position.Left} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!h-3 !rounded-none !bg-neutral-400 hover:!bg-black"
+      />
       {children}
-      <Handle type="source" position={Position.Right} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!h-3 !rounded-none !bg-neutral-400 hover:!bg-black"
+      />
     </div>
   );
 };

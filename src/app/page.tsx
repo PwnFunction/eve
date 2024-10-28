@@ -1,6 +1,7 @@
 "use client";
 
 import { Canvas } from "@/components/canvas";
+import { Explorer } from "@/components/explorer";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { styles } from "@/lib/styles/layout";
@@ -23,12 +24,7 @@ export default function Home() {
       <Canvas />
 
       {/* Explorer */}
-      <section
-        className="border-t border-neutral-200"
-        style={styles.bottomPanel}
-      >
-        Explorer
-      </section>
+      <Explorer />
 
       {/* Inspector */}
       <aside className="border-l border-neutral-200" style={styles.rightPanel}>
