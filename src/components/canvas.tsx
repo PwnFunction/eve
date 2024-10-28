@@ -18,42 +18,20 @@ import { useCallback, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { EventStream, Generic } from "./blocks";
 
-const initialNodes: Node[] = [
-  {
-    id: "1",
-    position: { x: 0, y: 0 },
-    data: { label: "Event Stream", frequency: 1000 },
-    type: "EventStream",
-  },
-  {
-    id: "2",
-    position: { x: 300, y: -100 },
-    data: { label: "Queue" },
-    type: "Generic",
-  },
-  {
-    id: "3",
-    position: { x: 500, y: 0 },
-    data: { label: "Process" },
-    type: "Generic",
-  },
-];
+// Flow initial state
+const initialNodes: Node[] = [];
+const initialEdges: Edge[] = [];
 
-const initialEdges: Edge[] = [
-  { id: "e1-2", source: "1", target: "2", animated: true },
-];
-
-const nodeTypes = {
-  EventStream,
-  Generic,
-};
-
+// Options
 const proOptions = { hideAttribution: true };
-
 const fitViewOptions = {
   padding: 0.2,
   minZoom: 1,
   maxZoom: 1,
+};
+const nodeTypes = {
+  EventStream,
+  Generic,
 };
 
 export const Canvas = () => {
