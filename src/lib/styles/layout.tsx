@@ -1,7 +1,7 @@
 export const styles = {
   parent: {
     display: "grid",
-    gridTemplateColumns: "0.6fr repeat(3, 1fr) 0.8fr",
+    gridTemplateColumns: "0.6fr repeat(3, 1fr) 1fr",
     gridTemplateRows: "0.06fr repeat(3, 1fr) 0.06fr",
     gridColumnGap: 0,
     gridRowGap: 0,
