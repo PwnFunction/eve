@@ -8,6 +8,8 @@ import {
   useOnSelectionChange,
 } from "@xyflow/react";
 import { useCallback, useState } from "react";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 export const Inspector = () => {
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
@@ -47,7 +49,7 @@ export const Inspector = () => {
           })}
         </div>
       ) : (
-        <p>
+        <p className="text-neutral-500">
           Select a node or edge to inspect its properties. Hold down the{" "}
           <kbd>CMD</kbd> key to select multiple nodes or edges.
         </p>
@@ -59,7 +61,31 @@ export const Inspector = () => {
 const NodeInspector = ({ node }: { node: Node }) => {
   return (
     <div>
-      <pre>{JSON.stringify(node, null, 2)}</pre>
+      <pre className="text-neutral-500">{JSON.stringify(node, null, 2)}</pre>
+
+      <div className="space-y-2">
+        {/* Type */}
+        <div className="flex items-center justify-between">
+          <Label>Type</Label>
+
+          <Input
+            value={node.type}
+            readOnly
+            className="w-fit cursor-not-allowed"
+          />
+        </div>
+
+        {/* ID */}
+        <div className="flex items-center justify-between">
+          <Label>ID</Label>
+
+          <Input
+            value={node.id}
+            readOnly
+            className="w-fit cursor-not-allowed"
+          />
+        </div>
+      </div>
     </div>
   );
 };
