@@ -9,6 +9,7 @@ import {
 } from "@xyflow/react";
 import { useCallback, useState } from "react";
 import { Input } from "./ui/input";
+import { Kbd } from "./ui/kbd";
 import { Label } from "./ui/label";
 
 export const Inspector = () => {
@@ -51,7 +52,7 @@ export const Inspector = () => {
       ) : (
         <p className="text-neutral-500">
           Select a node or edge to inspect its properties. Hold down the{" "}
-          <kbd>CMD</kbd> key to select multiple nodes or edges.
+          <Kbd>⌘</Kbd> or <Kbd>Ctrl</Kbd> key to select multiple nodes or edges.
         </p>
       )}
     </aside>
