@@ -1,7 +1,7 @@
 "use client";
 
-import { InfoIcon } from "@/lib/icons";
 import { styles } from "@/lib/styles/layout";
+import { Info } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Footer = () => {
@@ -23,7 +23,7 @@ export const Footer = () => {
       style={styles.footer}
     >
       <div className="flex items-center space-x-1">
-        <InfoIcon className="h-3 w-3 text-neutral-500" />
+        <Info size={12} />
         <span className="">
           Drag and drop from the explorer onto the canvas, edit the block's
           properties in the inspector, and see the changes in real-time on the
