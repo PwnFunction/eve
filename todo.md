@@ -1,4 +1,3 @@
-- [ ] list items in layers
 - [ ] add selected node styles
 - [ ] cross selection from layers to canvas and vice versa
 - [ ] show selected node's properties in inspector

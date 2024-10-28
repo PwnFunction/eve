@@ -15,6 +15,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { EventStream, Generic } from "./blocks";
 
 const initialNodes: Node[] = [
@@ -54,8 +55,6 @@ const fitViewOptions = {
   minZoom: 1,
   maxZoom: 1,
 };
-
-let id = 4;
 
 export const Canvas = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -101,7 +100,7 @@ export const Canvas = () => {
       };
 
       const newNode: Node = {
-        id: String(id++),
+        id: uuidv4(),
         type,
         position,
         data: {
