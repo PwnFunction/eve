@@ -17,3 +17,4 @@
 - [ ] add a xterm js logger to the explorer
 - [ ] add debug mode to inspector (show all properties)
 - [ ] add brief infos to footer on hover
+- [ ] show all shortcuts in modal
