@@ -1,3 +1,19 @@
 - [ ] multi selection inspector
+- [ ] delete selected node with shortcut
+  - [ ] from layers
+  - [ ] from the inspector
+- [ ] add a node with shortcut
+- [ ] select all nodes with shortcut
+- [ ] custom edge
+  - [ ] with delete button on hover
+- [ ] undo / redo
+  - [ ] with shortcut
 - [ ] inspector show connected nodes by filtering on edges
 - [ ] remove drag shadow
+- [ ] collision
+- [ ] layers show node name instead of node type
+- [ ] rename node in inspector
+- [ ] on new node, set node name to default name and a number (filter for node type and get a length + 1)
+- [ ] add a xterm js logger to the explorer
+- [ ] add debug mode to inspector (show all properties)
+- [ ] add brief infos to footer on hover
