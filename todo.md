@@ -18,3 +18,6 @@
 - [ ] add debug mode to inspector (show all properties)
 - [ ] add brief infos to footer on hover
 - [ ] show all shortcuts in modal
+- [ ] add custom variables with types (useful for later transformations) to node.data
+- [ ] cmdk for actions
+- [ ] floating panel play, stop, step, back, reset buttons
