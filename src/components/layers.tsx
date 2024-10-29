@@ -12,6 +12,7 @@ import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { useNodes } from "@xyflow/react";
 import { X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Kbd } from "./ui/kbd";
 
 export const Layers = () => {
@@ -23,6 +24,33 @@ export const Layers = () => {
   );
 
   const nodes = useNodes();
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
+
+  // Track shift key state
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Shift") setIsShiftPressed(true);
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Shift") setIsShiftPressed(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
+  const handleNodeClick = useCallback(
+    (nodeId: string) => {
+      selectNodes([nodeId], isShiftPressed);
+    },
+    [selectNodes, isShiftPressed],
+  );
 
   return (
     <aside
@@ -64,7 +92,7 @@ export const Layers = () => {
                 "bg-neutral-100": selectedNodeElements.includes(node),
               },
             )}
-            onClick={() => selectNodes([node.id])}
+            onClick={() => handleNodeClick(node.id)}
           >
             <span>{node.type}</span>
           </div>

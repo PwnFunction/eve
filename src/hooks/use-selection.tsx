@@ -24,13 +24,13 @@ export const useSelection = () => {
   });
 
   const selectNodes = useCallback(
-    (nodeIds: string[], reset: boolean = true) => {
+    (nodeIds: string[], addToSelection: boolean = false) => {
       setNodes((nodes) =>
         nodes.map((node) => ({
           ...node,
-          selected: reset
-            ? nodeIds.includes(node.id.toString())
-            : nodeIds.includes(node.id.toString()) || node.selected,
+          selected: addToSelection
+            ? nodeIds.includes(node.id.toString()) || node.selected
+            : nodeIds.includes(node.id.toString()),
         })),
       );
     },
@@ -38,13 +38,13 @@ export const useSelection = () => {
   );
 
   const selectEdges = useCallback(
-    (edgeIds: string[], reset: boolean = true) => {
+    (edgeIds: string[], addToSelection: boolean = false) => {
       setEdges((edges) =>
         edges.map((edge) => ({
           ...edge,
-          selected: reset
-            ? edgeIds.includes(edge.id.toString())
-            : edgeIds.includes(edge.id.toString()) || edge.selected,
+          selected: addToSelection
+            ? edgeIds.includes(edge.id.toString()) || edge.selected
+            : edgeIds.includes(edge.id.toString()),
         })),
       );
     },

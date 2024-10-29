@@ -1,5 +1,3 @@
-- [ ] add selected node styles
-- [ ] remove drag shadow
 - [ ] multi selection inspector
 - [ ] inspector show connected nodes by filtering on edges
-- [ ] multi select in layers panel
+- [ ] remove drag shadow
