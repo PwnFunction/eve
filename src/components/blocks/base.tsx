@@ -42,7 +42,7 @@ export const Base = ({
     <div
       className={cn(
         "w-fit border bg-neutral-50 px-4 py-2 active:bg-neutral-100",
-        selected && "ring-2 ring-black",
+        selected && "ring-1 ring-black",
         className,
       )}
       {...divProps}
