@@ -5,6 +5,7 @@ import {
   addEdge,
   Background,
   BackgroundVariant,
+  Controls,
   Panel,
   ReactFlow,
   useEdgesState,
@@ -118,6 +119,7 @@ export const Canvas = () => {
             {edges.length} {edges.length === 1 ? "Connection" : "Connections"}
           </Panel>
           <Background color="#999" variant={BackgroundVariant.Dots} />
+          <Controls />
         </ReactFlow>
       </div>
     </div>
