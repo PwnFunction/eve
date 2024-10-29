@@ -49,7 +49,7 @@ export const Inspector = () => {
 const NodeInspector = ({ node }: { node: Node }) => {
   return (
     <div>
-      <pre className="w-[400px] overflow-x-auto text-neutral-500">
+      <pre className="w-[360px] overflow-x-auto text-neutral-500">
         {JSON.stringify(node, null, 2)}
       </pre>
 
@@ -83,7 +83,7 @@ const NodeInspector = ({ node }: { node: Node }) => {
 const EdgeInspector = ({ edge }: { edge: Edge }) => {
   return (
     <div>
-      <pre className="w-[400px] overflow-x-auto text-neutral-500">
+      <pre className="w-[360px] overflow-x-auto text-neutral-500">
         {JSON.stringify(edge, null, 2)}
       </pre>
 
