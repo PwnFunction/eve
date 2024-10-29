@@ -1,14 +1,12 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-interface GenericProps {
+interface GenericProps extends NodeProps {
   data: { label: string };
 }
 
-export const Generic = ({ data }: NodeProps & GenericProps) => {
-  return (
-    <Base>
-      <p>{data.label}</p>
-    </Base>
-  );
-};
+export const Generic = (props: GenericProps) => (
+  <Base {...props}>
+    <p>{props.data.label}</p>
+  </Base>
+);

@@ -1,17 +1,18 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-interface EventStreamProps {
-  data: { frequency: number };
+interface EventStreamProps extends NodeProps {
+  data: {
+    frequency: number;
+  };
 }
 
-export const EventStream = ({ data }: NodeProps & EventStreamProps) => {
+export const EventStream = (props: EventStreamProps) => {
+  console.log(props.data.frequency);
+
   return (
-    <Base>
-      <p>
-        Event Stream:{" "}
-        <span className="font-mono text-xs">{data.frequency}</span>
-      </p>
+    <Base {...props}>
+      <p>Event Stream</p>
     </Base>
   );
 };
