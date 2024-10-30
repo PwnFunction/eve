@@ -21,3 +21,4 @@
 - [ ] add custom variables with types (useful for later transformations) to node.data
 - [ ] cmdk for actions
 - [ ] floating panel play, stop, step, back, reset buttons
+- [ ] de-select in layers
