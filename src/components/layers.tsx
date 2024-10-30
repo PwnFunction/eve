@@ -14,6 +14,7 @@ import { useNodes } from "@xyflow/react";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Kbd } from "./ui/kbd";
+import { ScrollArea } from "./ui/scroll-area";
 
 export const Layers = () => {
   const { selectedNodes, selectedEdges, selectNodes, clearSelection } =
@@ -54,16 +55,16 @@ export const Layers = () => {
 
   return (
     <aside
-      className="space-y-2 border-r border-neutral-200 p-2"
+      className="space-y-2 border-r border-neutral-200"
       style={styles.leftPanel}
     >
-      <div className="flex items-center justify-between">
-        <p>
-          Layers{" "}
+      <div className="flex w-full items-center justify-between border-b px-2 py-2">
+        <div className="w-fit select-none space-x-2 font-medium">
+          <span>Layers</span>
           <Kbd>
             <span className="text-neutral-500">{nodes.length}</span>
           </Kbd>
-        </p>
+        </div>
 
         <TooltipProvider>
           {selectedNodes.length > 1 && (
@@ -82,14 +83,14 @@ export const Layers = () => {
         </TooltipProvider>
       </div>
 
-      <div className="space-y-0.5">
+      <ScrollArea className="!mt-0 h-[95.5%]">
         {nodes.map((node) => (
           <div
             key={node.id}
             className={cn(
               "flex cursor-pointer select-none items-center space-x-2 px-2 py-1 hover:bg-neutral-100",
               {
-                "bg-neutral-100": selectedNodeElements.includes(node),
+                "bg-neutral-200": selectedNodeElements.includes(node),
               },
             )}
             onClick={() => handleNodeClick(node.id)}
@@ -97,7 +98,7 @@ export const Layers = () => {
             <span>{node.type}</span>
           </div>
         ))}
-      </div>
+      </ScrollArea>
     </aside>
   );
 };
