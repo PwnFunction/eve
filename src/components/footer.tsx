@@ -19,7 +19,7 @@ export const Footer = () => {
 
   return (
     <footer
-      className="flex select-none items-center justify-between border-t border-neutral-200 px-2 text-xs text-neutral-500"
+      className="flex select-none items-center justify-between border-t border-neutral-200 bg-neutral-100 px-2 text-xs text-neutral-500"
       style={styles.footer}
     >
       <div className="flex items-center space-x-1">
