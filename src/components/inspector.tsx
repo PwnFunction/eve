@@ -25,9 +25,9 @@ export const Inspector = () => {
         <div className="w-fit select-none space-x-2 font-medium">
           <span>Inspector</span>
           {rawMode && (
-            <span className="rounded-md bg-neutral-500/10 px-2 py-1 text-xs text-neutral-500">
-              read only
-            </span>
+            <Kbd>
+              <span className="text-neutral-500">read only</span>
+            </Kbd>
           )}
         </div>
         <div className="flex items-center space-x-2">

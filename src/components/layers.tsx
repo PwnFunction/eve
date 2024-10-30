@@ -61,9 +61,11 @@ export const Layers = () => {
       <div className="flex w-full items-center justify-between border-b px-2 py-2">
         <div className="w-fit select-none space-x-2 font-medium">
           <span>Layers</span>
-          <Kbd>
-            <span className="text-neutral-500">{nodes.length}</span>
-          </Kbd>
+          {selectedNodes.length > 0 && (
+            <Kbd>
+              <span className="text-neutral-500">{selectedNodes.length}</span>
+            </Kbd>
+          )}
         </div>
 
         <TooltipProvider>
