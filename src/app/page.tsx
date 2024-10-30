@@ -12,10 +12,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 export default function Home() {
   return (
     <ReactFlowProvider>
-      <main
-        className="grid min-h-screen border border-green-500 text-sm"
-        style={styles.parent}
-      >
+      <main className="grid h-screen text-sm" style={styles.parent}>
         {/* Header */}
         <Header />
 
