@@ -22,3 +22,4 @@
 - [ ] cmdk for actions
 - [ ] floating panel play, stop, step, back, reset buttons
 - [ ] de-select in layers
+- [ ] same shortcut for selection in layers and canvas
