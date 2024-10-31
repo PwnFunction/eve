@@ -44,7 +44,7 @@ export const Explorer = () => {
             onDragStart={(e) => onDragStart(e, "Generic")}
             draggable
           >
-            Generic Node
+            Generic
           </div>
         </div>
       ) : (
