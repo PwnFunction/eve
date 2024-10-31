@@ -32,20 +32,16 @@ export const Explorer = () => {
 
       {selectedTab === "Nodes" ? (
         <div className="space-y-2 p-2">
-          <div
-            className="w-fit cursor-move border bg-neutral-50 px-4 py-2 active:bg-neutral-100"
-            onDragStart={(e) => onDragStart(e, "EventStream")}
-            draggable
-          >
-            Event Stream
-          </div>
-          <div
-            className="w-fit cursor-move border bg-neutral-50 px-4 py-2 active:bg-neutral-100"
-            onDragStart={(e) => onDragStart(e, "Generic")}
-            draggable
-          >
-            Generic
-          </div>
+          {["EventStream", "Generic"].map((nodeType) => (
+            <div
+              key={nodeType}
+              className="w-fit cursor-move border bg-neutral-50 px-4 py-2 active:bg-neutral-100"
+              onDragStart={(e) => onDragStart(e, nodeType)}
+              draggable
+            >
+              {nodeType}
+            </div>
+          ))}
         </div>
       ) : (
         <div className="flex-1 bg-black font-mono text-neutral-400">
