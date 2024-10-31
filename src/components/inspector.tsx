@@ -84,8 +84,17 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => (
         <div className="flex items-center justify-between">
           <Label>ID</Label>
 
-          <Input value={node.id} disabled className="w-fit" />
+          <Input value={node.id} className="w-fit" disabled />
         </div>
+
+        {/* Data */}
+        {Object.entries(node.data).map(([key, value]) => (
+          <div key={key} className="flex items-center justify-between">
+            <Label className="capitalize">{key}</Label>
+
+            <Input value={value?.toString()} className="w-fit" disabled />
+          </div>
+        ))}
       </div>
     )}
   </div>
@@ -103,14 +112,14 @@ const EdgeInspector = ({ edge, rawMode }: { edge: Edge; rawMode: boolean }) => (
         <div className="flex items-center justify-between">
           <Label>Source</Label>
 
-          <Input value={edge.source} disabled className="w-fit" />
+          <Input value={edge.source} className="w-fit" disabled />
         </div>
 
         {/* Target */}
         <div className="flex items-center justify-between">
           <Label>Target</Label>
 
-          <Input value={edge.target} disabled className="w-fit" />
+          <Input value={edge.target} className="w-fit" disabled />
         </div>
       </div>
     )}

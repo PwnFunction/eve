@@ -3,16 +3,17 @@ import { Base } from "./base";
 
 interface EventStreamProps extends NodeProps {
   data: {
+    name: string;
     frequency: number;
   };
 }
 
 export const EventStream = (props: EventStreamProps) => {
-  console.log(props.data.frequency);
+  const { name } = props.data;
 
   return (
     <Base {...props}>
-      <p>Event Stream</p>
+      <p>{name}</p>
     </Base>
   );
 };

@@ -35,6 +35,16 @@ const nodeTypes = {
   Generic,
 };
 
+const defaultNodePrefs = {
+  EventStream: {
+    name: "Event Stream",
+    frequency: 1000,
+  },
+  Generic: {
+    name: "Generic",
+  },
+};
+
 export const Canvas = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -83,8 +93,7 @@ export const Canvas = () => {
         type,
         position,
         data: {
-          label: type === "EventStream" ? "Event Stream" : "Generic Node",
-          ...(type === "EventStream" ? { frequency: 1000 } : {}),
+          ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
         },
       };
 
