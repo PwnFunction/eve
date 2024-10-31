@@ -56,11 +56,11 @@ export const Layers = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Shift") setIsShiftPressed(true);
+      if (e.metaKey || e.ctrlKey) setIsShiftPressed(true);
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === "Shift") setIsShiftPressed(false);
+      if (!e.metaKey && !e.ctrlKey) setIsShiftPressed(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
