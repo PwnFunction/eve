@@ -15,7 +15,7 @@ import {
   type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { EventStream, Generic } from "./blocks";
 
@@ -51,6 +51,51 @@ export const Canvas = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
+  /**
+   * Create a new node
+   * @param position
+   * @param type
+   * @returns void
+   */
+  const createNode = useCallback(
+    (type: string = "Generic") => {
+      const newNode: Node = {
+        id: uuidv4(),
+        type,
+        position: {
+          x: 0,
+          y: 0,
+        },
+        selected: true,
+        data: {
+          ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
+        },
+      };
+      setNodes((nodes) => nodes.concat(newNode));
+    },
+    [setNodes],
+  );
+
+  useEffect(() => {
+    const handleCreateNode = (event: CustomEvent) => {
+      const { type } = event.detail;
+      createNode(type);
+    };
+
+    window.addEventListener("createNode", handleCreateNode as EventListener);
+    return () => {
+      window.removeEventListener(
+        "createNode",
+        handleCreateNode as EventListener,
+      );
+    };
+  }, [createNode]);
+
+  /**
+   * Handle connection between nodes
+   * @param connection
+   * @returns void
+   */
   const onConnect = useCallback(
     (connection: Connection) => {
       setEdges((prevEdges) =>
@@ -60,11 +105,21 @@ export const Canvas = () => {
     [setEdges],
   );
 
+  /**
+   * Handle drag over event
+   * @param event
+   * @returns void
+   */
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
 
+  /**
+   * Handle drop event
+   * @param event
+   * @returns void
+   */
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();

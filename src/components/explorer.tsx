@@ -1,14 +1,40 @@
+import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { useState } from "react";
 
 export const Explorer = () => {
+  const [selectedTab, setSelectedTab] = useState("Nodes");
+  const { clearSelection } = useSelection();
+
+  /**
+   * Drag start event handler
+   * @param event
+   * @param nodeType
+   * @returns void
+   */
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData("nodeType", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const [selectedTab, setSelectedTab] = useState("Nodes");
+  /**
+   * Double click event handler
+   * @param nodeType
+   * @returns void
+   */
+  const onDoubleClick = (nodeType: string) => {
+    // Clear node selection
+    clearSelection();
+
+    // Create a custom event to communicate with the Canvas component
+    const event = new CustomEvent("createNode", {
+      detail: {
+        type: nodeType,
+      },
+    });
+    window.dispatchEvent(event);
+  };
 
   return (
     <section
@@ -35,8 +61,9 @@ export const Explorer = () => {
           {["EventStream", "Generic"].map((nodeType) => (
             <div
               key={nodeType}
-              className="w-fit cursor-move border bg-neutral-50 px-4 py-2 active:bg-neutral-100"
+              className="active:bg-neutral-0 w-fit cursor-move border bg-neutral-50 px-4 py-2"
               onDragStart={(e) => onDragStart(e, nodeType)}
+              onDoubleClick={() => onDoubleClick(nodeType)}
               draggable
             >
               {nodeType}
