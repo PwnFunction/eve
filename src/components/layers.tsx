@@ -90,9 +90,9 @@ export const Layers = () => {
           <div
             key={node.id}
             className={cn(
-              "flex cursor-pointer select-none items-center space-x-2 px-2 py-1 hover:bg-neutral-100",
+              "flex cursor-pointer select-none items-center space-x-2 px-2 py-1 hover:bg-neutral-50",
               {
-                "bg-neutral-200": selectedNodeElements.includes(node),
+                "bg-neutral-100": selectedNodeElements.includes(node),
               },
             )}
             onClick={() => handleNodeClick(node.id)}
