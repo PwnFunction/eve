@@ -8,7 +8,7 @@ export const Explorer = () => {
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const [selectedTab, setSelectedTab] = useState("Explorer");
+  const [selectedTab, setSelectedTab] = useState("Nodes");
 
   return (
     <section
@@ -16,7 +16,7 @@ export const Explorer = () => {
       style={styles.bottomPanel}
     >
       <div className="flex w-full select-none items-center space-x-4 border-b p-2">
-        {["Explorer", "Logs"].map((tab) => (
+        {["Nodes", "Logs"].map((tab) => (
           <span
             key={tab}
             className={cn(
@@ -30,7 +30,7 @@ export const Explorer = () => {
         ))}
       </div>
 
-      {selectedTab === "Explorer" ? (
+      {selectedTab === "Nodes" ? (
         <div className="space-y-2 p-2">
           <div
             className="w-fit cursor-move border bg-neutral-50 px-4 py-2 active:bg-neutral-100"

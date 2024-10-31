@@ -77,22 +77,14 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => (
         <div className="flex items-center justify-between">
           <Label>Type</Label>
 
-          <Input
-            value={node.type}
-            readOnly
-            className="w-fit cursor-not-allowed"
-          />
+          <Input value={node.type} className="w-fit" disabled />
         </div>
 
         {/* ID */}
         <div className="flex items-center justify-between">
           <Label>ID</Label>
 
-          <Input
-            value={node.id}
-            readOnly
-            className="w-fit cursor-not-allowed"
-          />
+          <Input value={node.id} disabled className="w-fit" />
         </div>
       </div>
     )}
@@ -111,22 +103,14 @@ const EdgeInspector = ({ edge, rawMode }: { edge: Edge; rawMode: boolean }) => (
         <div className="flex items-center justify-between">
           <Label>Source</Label>
 
-          <Input
-            value={edge.source}
-            readOnly
-            className="w-fit cursor-not-allowed"
-          />
+          <Input value={edge.source} disabled className="w-fit" />
         </div>
 
         {/* Target */}
         <div className="flex items-center justify-between">
           <Label>Target</Label>
 
-          <Input
-            value={edge.target}
-            readOnly
-            className="w-fit cursor-not-allowed"
-          />
+          <Input value={edge.target} disabled className="w-fit" />
         </div>
       </div>
     )}
