@@ -71,7 +71,7 @@ export const Explorer = () => {
           ))}
         </div>
       ) : (
-        <div className="flex-1 bg-black font-mono text-neutral-400">
+        <div className="flex-1 p-2 font-mono text-neutral-500">
           <pre>
             {`[2021-09-02T15:00:00Z] INFO: Created Event Stream\n[2021-09-02T15:00:01Z] INFO: Created Generic Node`}
           </pre>
