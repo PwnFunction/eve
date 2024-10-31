@@ -10,8 +10,8 @@ import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
-import { useNodes } from "@xyflow/react";
-import { X } from "lucide-react";
+import { useNodes, useReactFlow } from "@xyflow/react";
+import { Trash, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Kbd } from "./ui/kbd";
 import { ScrollArea } from "./ui/scroll-area";
@@ -25,9 +25,35 @@ export const Layers = () => {
   );
 
   const nodes = useNodes();
-  const [isShiftPressed, setIsShiftPressed] = useState(false);
+
+  const { deleteElements } = useReactFlow();
+
+  /**
+   * Delete a node and its connected edges
+   * @param nodeId
+   * @returns void
+   */
+  const handleNodeDelete = useCallback(
+    (nodeId: string) => {
+      // Find the node to delete
+      const nodeToDelete = nodes.find((node) => node.id === nodeId);
+      if (!nodeToDelete) return;
+
+      // Delete the node and its connected edges
+      deleteElements({ nodes: [nodeToDelete], edges: [] });
+
+      // If the deleted node was selected, clear it from selection
+      if (selectedNodes.includes(nodeId)) {
+        const newSelection = selectedNodes.filter((id) => id !== nodeId);
+        selectNodes(newSelection, false);
+      }
+    },
+    [nodes, deleteElements, selectedNodes, selectNodes],
+  );
 
   // Track shift key state
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Shift") setIsShiftPressed(true);
@@ -87,20 +113,49 @@ export const Layers = () => {
 
       <ScrollArea className="!mt-0 h-[95.5%]">
         {nodes.map((node) => (
-          <div
+          <LayerItem
             key={node.id}
-            className={cn(
-              "flex cursor-pointer select-none items-center space-x-2 px-2 py-1 hover:bg-neutral-50",
-              {
-                "bg-neutral-100": selectedNodeElements.includes(node),
-              },
-            )}
-            onClick={() => handleNodeClick(node.id)}
-          >
-            <span>{node.type}</span>
-          </div>
+            node={node}
+            selected={selectedNodeElements.includes(node)}
+            selectOnClick={() => handleNodeClick(node.id)}
+            deleteOnClick={() => handleNodeDelete(node.id)}
+          />
         ))}
       </ScrollArea>
     </aside>
+  );
+};
+
+const LayerItem = ({
+  node,
+  selected,
+  selectOnClick,
+  deleteOnClick,
+}: {
+  node: any;
+  selected: boolean;
+  selectOnClick: () => void;
+  deleteOnClick: () => void;
+}) => {
+  const name = node.data?.name || node.type;
+
+  return (
+    <div
+      className={cn(
+        "group flex cursor-pointer select-none items-center justify-between hover:bg-neutral-50",
+        selected && "bg-neutral-100",
+      )}
+    >
+      <span className="flex-1 px-2 py-1" onClick={selectOnClick}>
+        {name}
+      </span>
+
+      <div
+        className="hidden h-full px-2 py-1 text-neutral-400 hover:text-red-500 group-hover:block"
+        onClick={deleteOnClick}
+      >
+        <Trash size={14} />
+      </div>
+    </div>
   );
 };
