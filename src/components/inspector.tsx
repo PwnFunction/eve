@@ -68,7 +68,7 @@ export const Inspector = () => {
 const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => (
   <div>
     {rawMode ? (
-      <pre className="w-[360px] overflow-x-auto text-neutral-500">
+      <pre className="w-[450px] overflow-x-auto text-neutral-500">
         {JSON.stringify(node, null, 2)}
       </pre>
     ) : (
@@ -103,7 +103,7 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => (
 const EdgeInspector = ({ edge, rawMode }: { edge: Edge; rawMode: boolean }) => (
   <div>
     {rawMode ? (
-      <pre className="w-[360px] overflow-x-auto text-neutral-500">
+      <pre className="w-[450px] overflow-x-auto text-neutral-500">
         {JSON.stringify(edge, null, 2)}
       </pre>
     ) : (
