@@ -3,8 +3,8 @@
 import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
-import { type Edge, type Node } from "@xyflow/react";
-import { useState } from "react";
+import { useReactFlow, type Edge, type Node } from "@xyflow/react";
+import { useCallback, useState } from "react";
 import { Input } from "./ui/input";
 import { Kbd } from "./ui/kbd";
 import { Label } from "./ui/label";
@@ -65,40 +65,68 @@ export const Inspector = () => {
   );
 };
 
-const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => (
-  <div>
-    {rawMode ? (
-      <pre className="w-[450px] overflow-x-auto text-neutral-500">
-        {JSON.stringify(node, null, 2)}
-      </pre>
-    ) : (
-      <div className="space-y-2">
-        {/* Type */}
-        <div className="flex items-center justify-between">
-          <Label>Type</Label>
+const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
+  const { setNodes } = useReactFlow();
 
-          <Input value={node.type} className="w-fit" disabled />
-        </div>
+  const updateNodeData = useCallback(
+    (key: string, value: string) => {
+      setNodes((nodes) =>
+        nodes.map((n) => {
+          if (n.id === node.id) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                [key]: value,
+              },
+            };
+          }
+          return n;
+        }),
+      );
+    },
+    [node.id, setNodes],
+  );
 
-        {/* ID */}
-        <div className="flex items-center justify-between">
-          <Label>ID</Label>
+  return (
+    <div>
+      {rawMode ? (
+        <pre className="w-[450px] overflow-x-auto text-neutral-500">
+          {JSON.stringify(node, null, 2)}
+        </pre>
+      ) : (
+        <div className="space-y-2">
+          {/* Type */}
+          <div className="flex items-center justify-between">
+            <Label>Type</Label>
 
-          <Input value={node.id} className="w-fit" disabled />
-        </div>
-
-        {/* Data */}
-        {Object.entries(node.data).map(([key, value]) => (
-          <div key={key} className="flex items-center justify-between">
-            <Label className="capitalize">{key}</Label>
-
-            <Input value={value?.toString()} className="w-fit" disabled />
+            <Input value={node.type} className="w-fit" disabled />
           </div>
-        ))}
-      </div>
-    )}
-  </div>
-);
+
+          {/* ID */}
+          <div className="flex items-center justify-between">
+            <Label>ID</Label>
+
+            <Input value={node.id} className="w-fit" disabled />
+          </div>
+
+          {/* Data */}
+          {Object.entries(node.data).map(([key, value]) => (
+            <div key={key} className="flex items-center justify-between">
+              <Label className="capitalize">{key}</Label>
+
+              <Input
+                value={value?.toString()}
+                className="w-fit"
+                onChange={(e) => updateNodeData(key, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const EdgeInspector = ({ edge, rawMode }: { edge: Edge; rawMode: boolean }) => (
   <div>

@@ -11,10 +11,7 @@
 - [ ] inspector show connected nodes by filtering on edges
 - [ ] remove drag shadow
 - [ ] collision
-- [ ] layers show node name instead of node type
-- [ ] rename node in inspector
 - [ ] on new node, set node name to default name and a number (filter for node type and get a length + 1)
-- [ ] add a xterm js logger to the explorer
 - [ ] add debug mode to inspector (show all properties)
 - [ ] add brief infos to footer on hover
 - [ ] show all shortcuts in modal
@@ -28,3 +25,4 @@
 - [ ] add logs on events
 - [ ] add log config to each node
 - [ ] usually last node should be the output node, if it isnt, show a warning
+- [ ] moveable layer items for ordering
