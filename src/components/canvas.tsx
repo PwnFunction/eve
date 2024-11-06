@@ -41,7 +41,7 @@ const defaultNodePrefs = {
   EventStream: {
     name: "Event Stream",
     frequency: 1000,
-    unit: "requests",
+    unit: "events",
     throttle: false,
   },
   Generic: {
