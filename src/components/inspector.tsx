@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
@@ -69,7 +76,7 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
   const { setNodes } = useReactFlow();
 
   const updateNodeData = useCallback(
-    (key: string, value: string) => {
+    (key: string, value: string | number | boolean) => {
       setNodes((nodes) =>
         nodes.map((n) => {
           if (n.id === node.id) {
@@ -98,28 +105,41 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
         <div className="space-y-2">
           {/* Type */}
           <div className="flex items-center justify-between">
-            <Label>Type</Label>
+            <Label className="flex-1">Type</Label>
 
-            <Input value={node.type} className="w-fit" disabled />
+            <Input value={node.type} className="w-fit flex-1" disabled />
           </div>
 
           {/* ID */}
           <div className="flex items-center justify-between">
-            <Label>ID</Label>
+            <Label className="flex-1">ID</Label>
 
-            <Input value={node.id} className="w-fit" disabled />
+            <Input value={node.id} className="w-fit flex-1" disabled />
           </div>
 
           {/* Data */}
           {Object.entries(node.data).map(([key, value]) => (
             <div key={key} className="flex items-center justify-between">
-              <Label className="capitalize">{key}</Label>
+              <Label className="flex-1 capitalize">{key}</Label>
 
-              <Input
-                value={value?.toString()}
-                className="w-fit"
-                onChange={(e) => updateNodeData(key, e.target.value)}
-              />
+              {typeof value === "boolean" ? (
+                <Select defaultValue={value.toString()}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder={key} className="capitalize" />
+                  </SelectTrigger>
+                  <SelectContent className="flex-1">
+                    <SelectItem value="true">true</SelectItem>
+                    <SelectItem value="false">false</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  value={value?.toString()}
+                  className="w-fit flex-1"
+                  type={typeof value === "string" ? "text" : "number"}
+                  onChange={(e) => updateNodeData(key, e.target.value)}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -138,16 +158,16 @@ const EdgeInspector = ({ edge, rawMode }: { edge: Edge; rawMode: boolean }) => (
       <div className="space-y-2">
         {/* Source */}
         <div className="flex items-center justify-between">
-          <Label>Source</Label>
+          <Label className="flex-1">Source</Label>
 
-          <Input value={edge.source} className="w-fit" disabled />
+          <Input value={edge.source} className="w-fit flex-1" disabled />
         </div>
 
         {/* Target */}
         <div className="flex items-center justify-between">
-          <Label>Target</Label>
+          <Label className="flex-1">Target</Label>
 
-          <Input value={edge.target} className="w-fit" disabled />
+          <Input value={edge.target} className="w-fit flex-1" disabled />
         </div>
       </div>
     )}
