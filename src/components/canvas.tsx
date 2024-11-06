@@ -1,5 +1,6 @@
 "use client";
 
+import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import {
   addEdge,
@@ -54,6 +55,7 @@ export const Canvas = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const { selectedNodes, selectedEdges, clearSelection } = useSelection();
 
   /**
    * Create a new node
@@ -94,6 +96,48 @@ export const Canvas = () => {
       );
     };
   }, [createNode]);
+
+  /**
+   * Handle delete key press on selected nodes
+   */
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Delete" || event.key === "Backspace") {
+        if (selectedNodes.length === 0 && selectedEdges.length === 0) return;
+
+        // Delete selected nodes
+        if (selectedNodes.length > 0) {
+          setNodes((nds) =>
+            nds.filter((node) => !selectedNodes.includes(node.id)),
+          );
+
+          // Delete edges connected to deleted nodes
+          setEdges((eds) =>
+            eds.filter(
+              (edge) =>
+                !selectedNodes.includes(edge.source) &&
+                !selectedNodes.includes(edge.target),
+            ),
+          );
+        }
+
+        // Delete selected edges
+        if (selectedEdges.length > 0) {
+          setEdges((eds) =>
+            eds.filter((edge) => !selectedEdges.includes(edge.id)),
+          );
+        }
+
+        // Clear selection after deletion
+        clearSelection();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedNodes, selectedEdges, setNodes, setEdges, clearSelection]);
 
   /**
    * Handle connection between nodes
