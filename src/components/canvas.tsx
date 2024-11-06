@@ -17,7 +17,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { EventStream, Generic } from "./blocks";
+import { EventStream, Generic, Output } from "./blocks";
 
 // Flow initial state
 const initialNodes: Node[] = [];
@@ -33,6 +33,7 @@ const fitViewOptions = {
 const nodeTypes = {
   EventStream,
   Generic,
+  Output,
 };
 
 const defaultNodePrefs = {
@@ -42,6 +43,9 @@ const defaultNodePrefs = {
   },
   Generic: {
     name: "Generic",
+  },
+  Output: {
+    name: "Output",
   },
 };
 
