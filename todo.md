@@ -1,11 +1,8 @@
 - [ ] multi selection inspector
-- [ ] delete selected node with shortcut
   - [ ] from layers
   - [ ] from the inspector
 - [ ] add a node with shortcut
 - [ ] select all nodes with shortcut
-- [ ] custom edge
-  - [ ] with delete button on hover
 - [ ] undo / redo
   - [ ] with shortcut
 - [ ] inspector show connected nodes by filtering on edges
@@ -19,7 +16,6 @@
 - [ ] cmdk for actions
 - [ ] floating panel play, stop, step, back, reset buttons
 - [ ] de-select in layers
-- [ ] same shortcut for selection in layers and canvas
 - [ ] custom controls for existing canvas controls
 - [ ] canvas select nodes by drawing rectangle
 - [ ] add logs on events
