@@ -12,7 +12,7 @@ export const EventStream = (props: EventStreamProps) => {
   const { name } = props.data;
 
   return (
-    <Base {...props}>
+    <Base leftHandle={false} {...props}>
       <p>{name}</p>
     </Base>
   );

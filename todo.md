@@ -24,3 +24,7 @@
 - [ ] de-select in layers
 - [ ] same shortcut for selection in layers and canvas
 - [ ] custom controls for existing canvas controls
+- [ ] canvas select nodes by drawing rectangle
+- [ ] add logs on events
+- [ ] add log config to each node
+- [ ] usually last node should be the output node, if it isnt, show a warning
