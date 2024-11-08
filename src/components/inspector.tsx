@@ -80,11 +80,19 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
       setNodes((nodes) =>
         nodes.map((n) => {
           if (n.id === node.id) {
+            const convertedValue = (() => {
+              const originalType = typeof node.data[key];
+              if (originalType === "number") {
+                return Number(value) || 0;
+              }
+              return value;
+            })();
+
             return {
               ...n,
               data: {
                 ...n.data,
-                [key]: value,
+                [key]: convertedValue,
               },
             };
           }
@@ -92,7 +100,7 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
         }),
       );
     },
-    [node.id, setNodes],
+    [node.id, setNodes, node.data],
   );
 
   return (
