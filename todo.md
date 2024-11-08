@@ -1,6 +1,7 @@
 - [ ] multi selection inspector
   - [ ] from layers
   - [ ] from the inspector
+  - [ ] from the canvas (rectangle selection)
 - [ ] add a node with shortcut
 - [ ] select all nodes with shortcut
 - [ ] undo / redo
@@ -17,14 +18,18 @@
 - [ ] floating panel play, stop, step, back, reset buttons
 - [ ] de-select in layers
 - [ ] custom controls for existing canvas controls
-- [ ] canvas select nodes by drawing rectangle
 - [ ] add logs on events
 - [ ] add log config to each node
 - [ ] usually last node should be the output node, if it isnt, show a warning
 - [ ] moveable layer items for ordering
 - [ ] store logs in index db
 - [ ] add queue node
+- [ ] randomize delays in process node
+- [ ] range delay in process node
 - [ ] add edge constraints to nodes based on the type of the node
+- [ ] animate edges only when running
+- [ ] new layout - canvas should be the main view, nodes go to the bottom of layers, Logs will stick to the bottom of canvas (also collapsible)
+- [ ] save / load
 - [ ] add "constraints" system for asserting conditions of the event system
   - [ ] global (ex: if queue.length > 10 then red alert)
   - [ ] node level (ex: if process 10 events then disable this node)
