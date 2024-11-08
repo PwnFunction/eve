@@ -1,11 +1,11 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-interface GenericProps extends NodeProps {
-  data: { name: string };
+interface ProcessProps extends NodeProps {
+  data: { name: string; delay: number };
 }
 
-export const Generic = (props: GenericProps) => {
+export const Process = (props: ProcessProps) => {
   const { name } = props.data;
 
   return (

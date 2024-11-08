@@ -18,7 +18,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { EventStream, Generic, Output } from "./blocks";
+import { EventStream, Output, Process } from "./blocks";
 
 // Flow initial state
 const initialNodes: Node[] = [];
@@ -33,7 +33,7 @@ const fitViewOptions = {
 };
 const nodeTypes = {
   EventStream,
-  Generic,
+  Process,
   Output,
 };
 
@@ -44,8 +44,9 @@ const defaultNodePrefs = {
     unit: "events",
     throttle: false,
   },
-  Generic: {
-    name: "Generic",
+  Process: {
+    name: "Process",
+    delay: 1000,
   },
   Output: {
     name: "Output",
@@ -66,7 +67,7 @@ export const Canvas = () => {
    * @returns void
    */
   const createNode = useCallback(
-    (type: string = "Generic") => {
+    (type: string) => {
       const newNode: Node = {
         id: uuidv4(),
         type,
