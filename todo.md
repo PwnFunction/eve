@@ -23,3 +23,14 @@
 - [ ] usually last node should be the output node, if it isnt, show a warning
 - [ ] moveable layer items for ordering
 - [ ] store logs in index db
+- [ ] add queue node
+- [ ] add edge constraints to nodes based on the type of the node
+- [ ] add "constraints" system for asserting conditions of the event system
+  - [ ] global (ex: if queue.length > 10 then red alert)
+  - [ ] node level (ex: if process 10 events then disable this node)
+- [ ] running controls
+  - [ ] time speed control
+  - [ ] pause / play
+  - [ ] step
+  - [ ] back
+  - [ ] reset
