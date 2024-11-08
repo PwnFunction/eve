@@ -22,3 +22,4 @@
 - [ ] add log config to each node
 - [ ] usually last node should be the output node, if it isnt, show a warning
 - [ ] moveable layer items for ordering
+- [ ] store logs in index db
