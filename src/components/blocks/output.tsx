@@ -2,7 +2,7 @@ import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
 interface OutputProps extends NodeProps {
-  data: { name: string };
+  data: { name: string; destination: string };
 }
 
 export const Output = (props: OutputProps) => {

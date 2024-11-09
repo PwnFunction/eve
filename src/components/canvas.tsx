@@ -48,6 +48,7 @@ export const defaultNodePrefs = {
   Queue: {
     name: "Queue",
     max: 100,
+    broadcast: false,
   },
   Process: {
     name: "Process",
