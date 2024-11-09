@@ -18,7 +18,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { EventStream, Output, Process } from "./blocks";
+import { EventStream, Output, Process, Queue } from "./blocks";
 
 // Flow initial state
 const initialNodes: Node[] = [];
@@ -33,16 +33,21 @@ const fitViewOptions = {
 };
 const nodeTypes = {
   EventStream,
+  Queue,
   Process,
   Output,
 };
 
-const defaultNodePrefs = {
+export const defaultNodePrefs = {
   EventStream: {
     name: "Event Stream",
     frequency: 1000,
     unit: "events",
     throttle: false,
+  },
+  Queue: {
+    name: "Queue",
+    max: 100,
   },
   Process: {
     name: "Process",

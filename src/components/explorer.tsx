@@ -2,6 +2,7 @@ import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { useState } from "react";
+import { defaultNodePrefs } from "./canvas";
 
 export const Explorer = () => {
   const [selectedTab, setSelectedTab] = useState("Nodes");
@@ -58,7 +59,7 @@ export const Explorer = () => {
 
       {selectedTab === "Nodes" ? (
         <div className="space-y-2 p-2">
-          {["EventStream", "Process", "Output"].map((nodeType) => (
+          {Object.keys(defaultNodePrefs).map((nodeType) => (
             <div
               key={nodeType}
               className="active:bg-neutral-0 w-fit cursor-move border bg-neutral-50 px-4 py-2"

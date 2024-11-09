@@ -19,17 +19,23 @@
 - [ ] de-select in layers
 - [ ] custom controls for existing canvas controls
 - [ ] add logs on events
+- [ ] add notes to nodes
+- [ ] restyle existing controls
 - [ ] add log config to each node
 - [ ] usually last node should be the output node, if it isnt, show a warning
 - [ ] moveable layer items for ordering
 - [ ] store logs in index db
-- [ ] add queue node
 - [ ] randomize delays in process node
+- [ ] search in layers
+- [ ] delete button while in inspector shouldnt delete the node
+- [ ] double click node to edit name
+- [ ] each view should hint what its for in the footer
 - [ ] range delay in process node
 - [ ] add edge constraints to nodes based on the type of the node
 - [ ] animate edges only when running
 - [ ] new layout - canvas should be the main view, nodes go to the bottom of layers, Logs will stick to the bottom of canvas (also collapsible)
 - [ ] save / load
+- [ ] raw json edit
 - [ ] add "constraints" system for asserting conditions of the event system
   - [ ] global (ex: if queue.length > 10 then red alert)
   - [ ] node level (ex: if process 10 events then disable this node)
