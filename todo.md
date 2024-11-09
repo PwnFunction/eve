@@ -1,5 +1,7 @@
 - [ ] multi selection inspector
   - [ ] from layers
+    - [x] one by one with ctrl/cmd
+    - [ ] all with shift
   - [ ] from the inspector
   - [ ] from the canvas (rectangle selection)
 - [ ] add a node with shortcut
@@ -45,3 +47,5 @@
   - [ ] step
   - [ ] back
   - [ ] reset
+- [ ] add optional labels (ex: event count on event block) to nodes
+- [ ] watcher tab for watching variables

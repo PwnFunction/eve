@@ -155,3 +155,21 @@ const end = nodes.filter((node) => {
 });
 
 log({ end });
+
+/**
+ *
+ * {
+ *   id: 1,
+ *   destination: [9, 3],
+ * }
+ *
+ * {
+ *   id: 2,
+ *   destination: [3],
+ * }
+ *
+ * {
+ *   id: 9,
+ *   source: [1],
+ * }
+ */
