@@ -48,3 +48,5 @@
 - [ ] add optional labels (ex: event count on event block) to nodes
 - [ ] watcher tab for watching variables
 - [ ] add errors like cycles in the graph to the logs
+- [ ] custom data transformations blocks
+- [ ] auto scroll in layers on new node creation
