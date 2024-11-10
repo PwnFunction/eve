@@ -2,6 +2,8 @@
 
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
+import { Graph } from "@/lib/vm/graph";
+import { RXRuntime } from "@/lib/vm/runtime";
 import {
   addEdge,
   Background,
@@ -31,12 +33,20 @@ const fitViewOptions = {
   minZoom: 1,
   maxZoom: 1,
 };
-const nodeTypes = {
-  EventStream,
-  Queue,
-  Process,
-  Output,
-};
+
+// Node types
+export enum NodeType {
+  EventStream = "EventStream",
+  Queue = "Queue",
+  Process = "Process",
+  Output = "Output",
+}
+export const nodeTypes = {
+  [NodeType.EventStream]: EventStream,
+  [NodeType.Queue]: Queue,
+  [NodeType.Process]: Process,
+  [NodeType.Output]: Output,
+} as const;
 
 export const defaultNodePrefs = {
   EventStream: {
@@ -261,6 +271,36 @@ export const Canvas = () => {
     },
     [reactFlowInstance, setNodes],
   );
+
+  /**
+   * Analyze the flow graph
+   * @returns void
+   */
+  const constructFlow = useCallback(() => {
+    try {
+      const graph = new Graph(nodes, edges);
+      const sortedIds = graph.topologicalSort();
+
+      const runtime = new RXRuntime(graph, sortedIds);
+      runtime.build();
+
+      console.log("Flow Analysis:");
+      sortedIds.forEach((id) => {
+        const node = nodes.find((n) => n.id === id);
+        if (node) {
+          console.log(`${node.id} (${node.type})`);
+        }
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Flow Analysis Error:", error.message);
+      }
+    }
+  }, [nodes, edges]);
+
+  useEffect(() => {
+    constructFlow();
+  }, [constructFlow]);
 
   return (
     <div className="flex h-full w-full" style={styles.centerPanel}>
