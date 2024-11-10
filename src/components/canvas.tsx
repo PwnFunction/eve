@@ -93,24 +93,24 @@ export const Canvas = () => {
    * @param type
    * @returns void
    */
-  const createNode = useCallback(
-    (type: string) => {
-      const newNode: Node = {
-        id: uuidv4(),
-        type,
-        position: {
-          x: 0,
-          y: 0,
-        },
-        selected: true,
-        data: {
-          ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
-        },
-      };
-      setNodes((nodes) => nodes.concat(newNode));
-    },
-    [setNodes],
-  );
+  const createNode = (type: string) => {
+    const newNode: Node = {
+      id: uuidv4(),
+      type,
+      position: {
+        x: 0,
+        y: 0,
+      },
+      selected: true,
+      data: {
+        ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
+        name: `${type} ${
+          nodes.filter((node) => node.type === type).length + 1
+        }`,
+      },
+    };
+    setNodes((nodes) => nodes.concat(newNode));
+  };
 
   useEffect(() => {
     const handleCreateNode = (event: CustomEvent) => {
@@ -246,42 +246,42 @@ export const Canvas = () => {
    * @param event
    * @returns void
    */
-  const onDrop = useCallback(
-    (event: React.DragEvent) => {
-      event.preventDefault();
+  const onDrop = (event: React.DragEvent) => {
+    event.preventDefault();
 
-      if (!reactFlowWrapper.current || !reactFlowInstance) {
-        return;
-      }
+    if (!reactFlowWrapper.current || !reactFlowInstance) {
+      return;
+    }
 
-      const type = event.dataTransfer.getData("nodeType");
-      if (!type) {
-        return;
-      }
+    const type = event.dataTransfer.getData("nodeType");
+    if (!type) {
+      return;
+    }
 
-      // Get the current viewport zoom level and pan offset
-      const { zoom, x: viewX, y: viewY } = reactFlowInstance.getViewport();
+    // Get the current viewport zoom level and pan offset
+    const { zoom, x: viewX, y: viewY } = reactFlowInstance.getViewport();
 
-      // Calculate the pointer position relative to the wrapper
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const position = {
-        x: (event.clientX - reactFlowBounds.left - viewX) / zoom,
-        y: (event.clientY - reactFlowBounds.top - viewY) / zoom,
-      };
+    // Calculate the pointer position relative to the wrapper
+    const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+    const position = {
+      x: (event.clientX - reactFlowBounds.left - viewX) / zoom,
+      y: (event.clientY - reactFlowBounds.top - viewY) / zoom,
+    };
 
-      const newNode: Node = {
-        id: uuidv4(),
-        type,
-        position,
-        data: {
-          ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
-        },
-      };
+    const newNode: Node = {
+      id: uuidv4(),
+      type,
+      position,
+      data: {
+        ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
+        name: `${type} ${
+          nodes.filter((node) => node.type === type).length + 1
+        }`,
+      },
+    };
 
-      setNodes((nodes) => nodes.concat(newNode));
-    },
-    [reactFlowInstance, setNodes],
-  );
+    setNodes((nodes) => nodes.concat(newNode));
+  };
 
   /**
    * Analyze the flow graph

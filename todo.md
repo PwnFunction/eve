@@ -2,7 +2,6 @@
   - [ ] from layers
     - [x] one by one with ctrl/cmd
     - [ ] all with shift
-  - [ ] from the inspector
   - [ ] from the canvas (rectangle selection)
 - [ ] add a node with shortcut
 - [ ] select all nodes with shortcut
@@ -11,7 +10,6 @@
 - [ ] inspector show connected nodes by filtering on edges
 - [ ] remove drag shadow
 - [ ] collision
-- [ ] on new node, set node name to default name and a number (filter for node type and get a length + 1)
 - [ ] add debug mode to inspector (show all properties)
 - [ ] add brief infos to footer on hover
 - [ ] show all shortcuts in modal
@@ -27,11 +25,11 @@
 - [ ] usually last node should be the output node, if it isnt, show a warning
 - [ ] moveable layer items for ordering
 - [ ] store logs in index db
-- [ ] randomize delays in process node
 - [ ] search in layers
 - [ ] delete button while in inspector shouldnt delete the node
 - [ ] double click node to edit name
 - [ ] each view should hint what its for in the footer
+- [ ] randomize delays in process node
 - [ ] range delay in process node
 - [ ] add edge constraints to nodes based on the type of the node
 - [ ] animate edges only when running
@@ -50,4 +48,3 @@
 - [ ] add optional labels (ex: event count on event block) to nodes
 - [ ] watcher tab for watching variables
 - [ ] add errors like cycles in the graph to the logs
-- [ ] modal error for cycles
