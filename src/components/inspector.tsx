@@ -24,25 +24,25 @@ export const Inspector = () => {
     selectedEdges,
   );
 
-  const [rawMode, setRawMode] = useState(false);
+  const [debug, setDebugMode] = useState(false);
 
   return (
     <aside className="border-l border-neutral-200" style={styles.rightPanel}>
       <div className="flex w-full items-center justify-between border-b px-2">
         <div className="w-fit select-none space-x-2 font-medium">
           <span>Inspector</span>
-          {rawMode && (
+          {debug && (
             <Kbd>
               <span className="text-neutral-500">read only</span>
             </Kbd>
           )}
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-neutral-500">Raw mode</span>
+          <span className="text-neutral-500">Debug mode</span>
           <Switch
             className="m-2"
-            checked={rawMode}
-            onCheckedChange={setRawMode}
+            checked={debug}
+            onCheckedChange={setDebugMode}
           />
         </div>
       </div>
@@ -51,13 +51,13 @@ export const Inspector = () => {
         {selectedNodes.length > 0 ? (
           <div>
             {selectedNodeElements.map((node) => (
-              <NodeInspector key={node.id} node={node} rawMode={rawMode} />
+              <NodeInspector key={node.id} node={node} debugMode={debug} />
             ))}
           </div>
         ) : selectedEdges.length > 0 ? (
           <div>
             {selectedEdgeElements.map((edge) => (
-              <EdgeInspector key={edge.id} edge={edge} rawMode={rawMode} />
+              <EdgeInspector key={edge.id} edge={edge} debugMode={debug} />
             ))}
           </div>
         ) : (
@@ -72,7 +72,13 @@ export const Inspector = () => {
   );
 };
 
-const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
+const NodeInspector = ({
+  node,
+  debugMode,
+}: {
+  node: Node;
+  debugMode: boolean;
+}) => {
   const { setNodes } = useReactFlow();
 
   const updateNodeData = useCallback(
@@ -105,7 +111,7 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
 
   return (
     <div>
-      {rawMode ? (
+      {debugMode ? (
         <pre className="w-[450px] overflow-x-auto text-neutral-500">
           {JSON.stringify(node, null, 2)}
         </pre>
@@ -156,9 +162,15 @@ const NodeInspector = ({ node, rawMode }: { node: Node; rawMode: boolean }) => {
   );
 };
 
-const EdgeInspector = ({ edge, rawMode }: { edge: Edge; rawMode: boolean }) => (
+const EdgeInspector = ({
+  edge,
+  debugMode,
+}: {
+  edge: Edge;
+  debugMode: boolean;
+}) => (
   <div>
-    {rawMode ? (
+    {debugMode ? (
       <pre className="w-[450px] overflow-x-auto text-neutral-500">
         {JSON.stringify(edge, null, 2)}
       </pre>

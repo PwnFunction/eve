@@ -20,6 +20,7 @@ import {
   Controls,
   Panel,
   ReactFlow,
+  SelectionMode,
   useEdgesState,
   useNodesState,
   type Connection,
@@ -330,6 +331,10 @@ export const Canvas = () => {
           fitView
           fitViewOptions={fitViewOptions}
           defaultViewport={{ zoom: 1, x: 0, y: 0 }}
+          panOnDrag={[1]}
+          selectionMode={SelectionMode.Partial}
+          selectionOnDrag={true}
+          selectNodesOnDrag={true}
         >
           <Panel
             position="bottom-right"

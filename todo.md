@@ -2,7 +2,6 @@
   - [ ] from layers
     - [x] one by one with ctrl/cmd
     - [ ] all with shift
-  - [ ] from the canvas (rectangle selection)
 - [ ] add a node with shortcut
 - [ ] select all nodes with shortcut
 - [ ] undo / redo
@@ -35,7 +34,7 @@
 - [ ] animate edges only when running
 - [ ] new layout - canvas should be the main view, nodes go to the bottom of layers, Logs will stick to the bottom of canvas (also collapsible)
 - [ ] save / load
-- [ ] raw json edit
+- [ ] debug raw json edit
 - [ ] add "constraints" system for asserting conditions of the event system
   - [ ] global (ex: if queue.length > 10 then red alert)
   - [ ] node level (ex: if process 10 events then disable this node)
