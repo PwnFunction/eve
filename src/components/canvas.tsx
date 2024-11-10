@@ -149,17 +149,65 @@ export const Canvas = () => {
   }, [selectedNodes, selectedEdges, setNodes, setEdges, clearSelection]);
 
   /**
+   * Check if adding a new edge would create a cycle
+   * @param connection - The new connection being attempted
+   * @returns boolean - True if adding the connection would create a cycle
+   * @see https://en.wikipedia.org/wiki/Cycle_detection
+   */
+  const hasCycle = useCallback(
+    (connection: Connection) => {
+      const visited = new Set<string>();
+      const visiting = new Set<string>();
+
+      const dfs = (nodeId: string): boolean => {
+        // If we find a node we're currently visiting, there's a cycle
+        if (visiting.has(nodeId)) return true;
+        // If we've already fully explored this node, no cycle here
+        if (visited.has(nodeId)) return false;
+
+        visiting.add(nodeId);
+
+        // Get all edges going out from this node (including the new potential edge)
+        const outgoingEdges = edges
+          .concat({
+            id: "temporary",
+            source: connection.source!,
+            target: connection.target!,
+          })
+          .filter((edge) => edge.source === nodeId);
+
+        // Check all connected nodes for cycles
+        for (const edge of outgoingEdges) {
+          if (dfs(edge.target)) return true;
+        }
+
+        // Remove from visiting set and add to fully visited
+        visiting.delete(nodeId);
+        visited.add(nodeId);
+        return false;
+      };
+
+      return dfs(connection.source!);
+    },
+    [edges],
+  );
+
+  /**
    * Handle connection between nodes
    * @param connection
    * @returns void
    */
   const onConnect = useCallback(
     (connection: Connection) => {
-      setEdges((prevEdges) =>
-        addEdge({ ...connection, animated: true }, prevEdges),
-      );
+      if (!hasCycle(connection)) {
+        setEdges((prevEdges) =>
+          addEdge({ ...connection, animated: true }, prevEdges),
+        );
+      } else {
+        alert("Cannot create connection: this would create a infinite loop.");
+      }
     },
-    [setEdges],
+    [setEdges, hasCycle],
   );
 
   /**
