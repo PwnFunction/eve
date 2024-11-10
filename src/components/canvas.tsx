@@ -1,5 +1,14 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { Graph } from "@/lib/vm/graph";
@@ -75,6 +84,8 @@ export const Canvas = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const { selectedNodes, selectedEdges, clearSelection } = useSelection();
+
+  const [showDialog, setShowDialog] = useState(false);
 
   /**
    * Create a new node
@@ -214,7 +225,7 @@ export const Canvas = () => {
           addEdge({ ...connection, animated: true }, prevEdges),
         );
       } else {
-        alert("Cannot create connection: this would create a infinite loop.");
+        setShowDialog(true);
       }
     },
     [setEdges, hasCycle],
@@ -331,6 +342,24 @@ export const Canvas = () => {
           <Controls />
         </ReactFlow>
       </div>
+
+      {/* Dialogs */}
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-600">
+              Cycle Detected
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              You cannot add a connection that would create a cycle in the flow
+              graph, as it would result in an infinite loop.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
