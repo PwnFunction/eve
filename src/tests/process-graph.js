@@ -4,30 +4,19 @@ const nodes = [
     id: "1",
     data: {
       type: "event-stream",
-      unit: "requests",
-      name: `Event Stream 1`,
-      frequency: 1000,
-      period: 1000, // ms
     },
   },
   {
     id: "2",
     data: {
       type: "event-stream",
-      unit: "requests",
-      name: `Event Stream 2`,
-      frequency: 1000,
-      period: 1000, // ms
     },
   },
-  // router
+  // queue
   {
     id: "3",
     data: {
-      type: "router",
-      mode: "fifo", // fifo, wait
-      inputs: ["1", "2"],
-      outputs: ["4", "5"],
+      type: "queue",
     },
   },
   // process
@@ -35,61 +24,47 @@ const nodes = [
     id: "4",
     data: {
       type: "process",
-      delay: 1000, // ms
     },
   },
   {
     id: "5",
     data: {
       type: "process",
-      delay: 2000, // ms
     },
   },
-  // router
   {
     id: "6",
     data: {
-      type: "router",
-      mode: "wait",
-      inputs: ["4", "5"],
-      outputs: ["7"],
-    },
-  },
-  // process
-  {
-    id: "7",
-    data: {
       type: "process",
-      delay: 1000, // ms
     },
   },
   // output
   {
-    id: "8",
+    id: "7",
     data: {
       type: "output",
-      to: "log", // log, store
     },
   },
+  // queue
+  {
+    id: "8",
+    data: {
+      type: "queue",
+    },
+  },
+  // output
   {
     id: "9",
     data: {
       type: "output",
-      to: "log", // log, store
     },
   },
 ];
-
 const edges = [
   {
     id: crypto.randomUUID().slice(0, 7),
     source: nodes[0].id,
     target: nodes[2].id,
-  },
-  {
-    id: crypto.randomUUID().slice(0, 7),
-    source: nodes[0].id,
-    target: nodes[8].id,
   },
   {
     id: crypto.randomUUID().slice(0, 7),
@@ -108,13 +83,18 @@ const edges = [
   },
   {
     id: crypto.randomUUID().slice(0, 7),
-    source: nodes[3].id,
+    source: nodes[2].id,
     target: nodes[5].id,
   },
   {
     id: crypto.randomUUID().slice(0, 7),
+    source: nodes[3].id,
+    target: nodes[6].id,
+  },
+  {
+    id: crypto.randomUUID().slice(0, 7),
     source: nodes[4].id,
-    target: nodes[5].id,
+    target: nodes[6].id,
   },
   {
     id: crypto.randomUUID().slice(0, 7),
@@ -123,53 +103,77 @@ const edges = [
   },
   {
     id: crypto.randomUUID().slice(0, 7),
-    source: nodes[6].id,
+    source: nodes[3].id,
     target: nodes[7].id,
   },
+  {
+    id: crypto.randomUUID().slice(0, 7),
+    source: nodes[4].id,
+    target: nodes[7].id,
+  },
+  {
+    id: crypto.randomUUID().slice(0, 7),
+    source: nodes[7].id,
+    target: nodes[8].id,
+  },
+  // cyclic
+  // {
+  //   id: crypto.randomUUID().slice(0, 7),
+  //   source: nodes[5].id,
+  //   target: nodes[2].id,
+  // },
 ];
 
-function log(x) {
-  console.log(JSON.stringify(x, null, 2));
+/**
+ * Topological Sort
+ * @param {*} startNode
+ * @param {*} visited
+ * @param {*} visiting
+ * @param {*} sorted
+ * @returns sorted
+ */
+function topologicalSort(startNode, visited = [], visiting = [], sorted = []) {
+  // If we encounter a node we're currently visiting, we've found a cycle
+  if (visiting.includes(startNode.id)) {
+    throw new Error(`Cycle detected involving node ${startNode.id}`);
+  }
+
+  // If we've already completely visited this node, skip it
+  if (visited.includes(startNode.id)) {
+    return;
+  }
+
+  // Mark node as being visited in current path
+  visiting.push(startNode.id);
+
+  let connectedEdges = edges.filter((edge) => edge.source === startNode.id);
+  let connectedNodes = nodes.filter((node) => {
+    return connectedEdges.map((edge) => edge.target).includes(node.id);
+  });
+
+  // Visit all connected nodes
+  connectedNodes.forEach((node) =>
+    topologicalSort(node, visited, visiting, sorted),
+  );
+
+  // Remove node from visiting set as we're done with this path
+  visiting.splice(visiting.indexOf(startNode.id), 1);
+
+  // Mark as fully visited and add to sorted list
+  visited.push(startNode.id);
+  sorted.push(startNode.id);
+
+  return sorted;
 }
 
-/**
- * GRAPH
- *    9
- *  /
- * 1     4
- *   \ /  \
- *    3    6 - 7 - 8
- *   / \  /
- * 2    5
- *
- */
+const starts = nodes.filter((node) => node.data.type === "event-stream");
 
-const start = nodes.filter((node) => node.data.type === "event-stream");
-log({ start });
+let visited = [];
+starts.forEach((start) => {
+  let sorted = topologicalSort(start, visited);
 
-const end = nodes.filter((node) => {
-  const isTarget = !!edges.filter((edge) => edge.target === node.id).length;
-  const isNotSource = !edges.filter((edge) => edge.source === node.id).length;
-
-  return isTarget && isNotSource;
+  sorted.forEach((id) => {
+    let n = nodes.find((node) => node.id === id);
+    console.log(n.id, n.data.type);
+  });
 });
-
-log({ end });
-
-/**
- *
- * {
- *   id: 1,
- *   destination: [9, 3],
- * }
- *
- * {
- *   id: 2,
- *   destination: [3],
- * }
- *
- * {
- *   id: 9,
- *   source: [1],
- * }
- */
