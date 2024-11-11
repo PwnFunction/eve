@@ -49,3 +49,4 @@
 - [ ] add errors like cycles in the graph to the logs
 - [ ] custom data transformations blocks
 - [ ] auto scroll in layers on new node creation
+- [ ] debug on eventstream block should show live event stream
