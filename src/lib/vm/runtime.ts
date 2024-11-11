@@ -5,6 +5,7 @@ import {
   type QueueProps,
 } from "@/components/blocks";
 import { NodeType } from "@/components/canvas";
+import { type Edge } from "@xyflow/react";
 import { interval, Subject } from "rxjs";
 import { Graph } from "./graph";
 
@@ -17,7 +18,7 @@ export class RXRuntime {
   private buildOrder: string[];
 
   public components = new Map<string, any>();
-  public componentEdges: Map<string, string> = new Map();
+  public componentEdges: Edge[] = [];
 
   /**
    * Create a new runtime
@@ -75,32 +76,50 @@ export class RXRuntime {
     // A -> B -> C
     this.buildOrder.reverse().forEach((nodeId) => {
       this.graph.edges
-        .filter((e) => e.source == nodeId)
-        .forEach((edge) => {
-          const source = this.components.get(edge.source);
-          const target = this.components.get(edge.target);
-
-          // If either source or target is missing, skip
-          if (!source || !target) {
-            return;
-          }
-
-          // If connection is already established, skip
-          if (
-            this.componentEdges.has(edge.source) &&
-            this.componentEdges.get(edge.source) === edge.target
-          ) {
-            return;
-          }
-
-          // Connect the components together
-          if (!this.componentEdges.has(edge.source)) {
-            this.componentEdges.set(edge.source, edge.target);
-          }
-        });
+        .filter((edge) => edge.target === nodeId)
+        .forEach((edge) => this.connectComponents(edge));
     });
+
     console.log("-------------");
     console.log(this.componentEdges);
+    console.log("-------------");
+
+    // Third pass: confirm all connections
+  }
+
+  /**
+   * Check if a connection exists
+   * @param source
+   * @param target
+   * @returns boolean
+   */
+  connectionExists(source: string, target: string) {
+    return this.componentEdges.filter(
+      (edge) => edge.source === source && edge.target === target,
+    ).length;
+  }
+
+  /**
+   * Connect components
+   * @param edge
+   * @returns void
+   */
+  connectComponents(edge: Edge) {
+    const source = this.components.get(edge.source);
+    const target = this.components.get(edge.target);
+
+    // If either source or target is missing, skip
+    if (!source || !target) {
+      return;
+    }
+
+    // If connection is already established, skip
+    if (this.connectionExists(edge.source, edge.target)) {
+      return;
+    }
+
+    // Connect the components together
+    this.componentEdges.push(edge);
   }
 
   /**
