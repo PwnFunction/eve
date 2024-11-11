@@ -1,8 +1,21 @@
+import {
+  EventStreamProps,
+  OutputProps,
+  ProcessProps,
+  QueueProps,
+} from "@/components/blocks";
 import { NodeType } from "@/components/canvas";
 import { type Edge, type Node } from "@xyflow/react";
 
+export type EveNode =
+  | Node
+  | EventStreamProps
+  | QueueProps
+  | ProcessProps
+  | OutputProps;
+
 export class Graph {
-  public nodes: Node[];
+  public nodes: EveNode[];
   public edges: Edge[];
 
   /**
@@ -10,7 +23,7 @@ export class Graph {
    * @param nodes
    * @param edges
    */
-  constructor(nodes: Node[], edges: Edge[]) {
+  constructor(nodes: EveNode[], edges: Edge[]) {
     this.nodes = nodes;
     this.edges = edges;
   }
@@ -24,7 +37,7 @@ export class Graph {
    * @returns void
    */
   private topologicalSortUtil(
-    startNode: Node,
+    startNode: EveNode,
     visited: Set<string>,
     visiting: Set<string>,
     sorted: string[],
@@ -82,7 +95,7 @@ export class Graph {
       }
     }
 
-    return sorted;
+    return sorted.reverse();
   }
 
   /**
@@ -94,7 +107,7 @@ export class Graph {
     sorted.forEach((id) => {
       const node = this.nodes.find((n) => n.id === id);
       if (node) {
-        console.log(node.id, node.data.type);
+        console.log(node.id, node.type);
       }
     });
   }
