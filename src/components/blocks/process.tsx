@@ -1,7 +1,7 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-interface ProcessProps extends NodeProps {
+export interface ProcessProps extends NodeProps {
   data: { name: string; delay: number };
 }
 

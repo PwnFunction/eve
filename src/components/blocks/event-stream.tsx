@@ -1,7 +1,7 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-interface EventStreamProps extends NodeProps {
+export interface EventStreamProps extends NodeProps {
   data: {
     name: string;
     frequency: number;

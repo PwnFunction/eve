@@ -1,7 +1,7 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-interface QueueProps extends NodeProps {
+export interface QueueProps extends NodeProps {
   data: { name: string; max: number; broadcast: boolean };
 }
 
