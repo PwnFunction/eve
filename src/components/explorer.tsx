@@ -5,7 +5,7 @@ import { useState } from "react";
 import { defaultNodePrefs } from "./canvas";
 
 export const Explorer = () => {
-  const [selectedTab, setSelectedTab] = useState("Nodes");
+  const [selectedTab, setSelectedTab] = useState("Blocks");
   const { clearSelection } = useSelection();
 
   /**
@@ -43,7 +43,7 @@ export const Explorer = () => {
       style={styles.bottomPanel}
     >
       <div className="flex w-full select-none items-center space-x-4 border-b p-2">
-        {["Nodes", "Logs"].map((tab) => (
+        {["Blocks", "Logs"].map((tab) => (
           <span
             key={tab}
             className={cn(
@@ -57,7 +57,7 @@ export const Explorer = () => {
         ))}
       </div>
 
-      {selectedTab === "Nodes" ? (
+      {selectedTab === "Blocks" ? (
         <div className="space-y-2 p-2">
           {Object.keys(defaultNodePrefs).map((nodeType) => (
             <div

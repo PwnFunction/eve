@@ -295,17 +295,9 @@ export const Canvas = () => {
 
       const runtime = new RXRuntime(graph, sortedIds);
       runtime.build();
-
-      console.log("Flow Analysis:");
-      sortedIds.forEach((id) => {
-        const node = nodes.find((n) => n.id === id);
-        if (node) {
-          console.log(`${node.id} (${node.type})`);
-        }
-      });
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Flow Analysis Error:", error.message);
+        console.error("Build Error:", error.message);
       }
     }
   }, [nodes, edges]);
@@ -340,7 +332,7 @@ export const Canvas = () => {
             position="bottom-right"
             className="font-mono text-xs text-neutral-500"
           >
-            {nodes.length} {nodes.length === 1 ? "Node" : "Nodes"},{" "}
+            {nodes.length} {nodes.length === 1 ? "Block" : "Blocks"},{" "}
             {edges.length} {edges.length === 1 ? "Connection" : "Connections"}
           </Panel>
           <Background color="#999" variant={BackgroundVariant.Dots} />
