@@ -158,6 +158,7 @@ export const Canvas = () => {
       },
     };
     setNodes((nodes) => nodes.concat(newNode));
+    focusOnSelectedNode();
   };
 
   useEffect(() => {
