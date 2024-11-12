@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useFlowConstruction } from "@/hooks/use-flow-construction";
+import { useNodeFocusListener } from "@/hooks/use-node-focus-listener";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { Graph } from "@/lib/vm/graph";
@@ -90,6 +91,7 @@ export const Canvas = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const { selectedNodes, selectedEdges, clearSelection } = useSelection();
   const { setCenter, getNode } = useReactFlow();
+  const [newNodeId, setNewNodeId] = useState<string | null>(null);
 
   // Dialog states
   const [showCycleDetectionDialog, setShowCycleDetectionDialog] =
@@ -97,25 +99,42 @@ export const Canvas = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
 
   /**
-   * Focus on the selected node
+   * Focus on the selected node, centering it precisely by accounting for its dimensions
+   * @param nodeId - The ID of the node to focus on
+   * @returns void
    */
-  const focusOnSelectedNode = useCallback(() => {
-    // If there are selected nodes, focus on the first one
-    if (selectedNodes.length > 0) {
-      const selectedNode = getNode(selectedNodes[0]);
+  const focusOnNode = useCallback(
+    (nodeId: string) => {
+      const node = getNode(nodeId);
+      if (node) {
+        const nodeWidth = node.width ?? 150;
+        const nodeHeight = node.height ?? 40;
 
-      if (selectedNode) {
-        setCenter(selectedNode.position.x, selectedNode.position.y, {
-          zoom: 1.5,
+        const centerX = node.position.x + nodeWidth / 2;
+        const centerY = node.position.y + nodeHeight / 2;
+
+        setCenter(centerX, centerY, {
+          zoom: 1,
           duration: 800,
         });
       }
+    },
+    [getNode, setCenter],
+  );
+
+  /**
+   * Focus on the selected node
+   * @returns void
+   */
+  const focusOnSelectedNode = useCallback(() => {
+    if (selectedNodes.length > 0) {
+      focusOnNode(selectedNodes[0]);
     }
-  }, [selectedNodes, setCenter, getNode]);
+  }, [selectedNodes, focusOnNode]);
 
   /**
    * Handle key press events
-   * @param event
+   * @param event - The key press event
    * @returns void
    */
   const handleKeyPress = useCallback(
@@ -128,6 +147,7 @@ export const Canvas = () => {
     [focusOnSelectedNode],
   );
 
+  // Listen for key press events
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
     return () => {
@@ -135,32 +155,59 @@ export const Canvas = () => {
     };
   }, [handleKeyPress]);
 
+  // Listen for double-click focus events
+  useNodeFocusListener(focusOnNode);
+
   /**
    * Create a new node
-   * @param position
-   * @param type
+   * @param type - The type of the new node
    * @returns void
    */
-  const createNode = (type: string) => {
-    const newNode: Node = {
-      id: uuidv4(),
-      type,
-      position: {
-        x: 0,
-        y: 0,
-      },
-      selected: true,
-      data: {
-        ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
-        name: `${type} ${
-          nodes.filter((node) => node.type === type).length + 1
-        }`,
-      },
-    };
-    setNodes((nodes) => nodes.concat(newNode));
-    focusOnSelectedNode();
-  };
+  const createNode = useCallback(
+    (type: string) => {
+      const nodeId = uuidv4();
 
+      // First, clear selection
+      clearSelection();
+
+      // Then create and add the new node
+      const newNode: Node = {
+        id: nodeId,
+        type,
+        position: {
+          x: 0,
+          y: 0,
+        },
+        selected: true,
+        data: {
+          ...defaultNodePrefs[type as keyof typeof defaultNodePrefs],
+          name: `${type} ${
+            nodes.filter((node) => node.type === type).length + 1
+          }`,
+        },
+      };
+
+      setNodes((nodes) => nodes.concat(newNode));
+      // Store the new node ID for focusing
+      setNewNodeId(nodeId);
+    },
+    [nodes, clearSelection, setNodes],
+  );
+
+  // Focus on the newly created node
+  useEffect(() => {
+    if (newNodeId) {
+      // Small timeout to ensure state updates are complete
+      const timeoutId = setTimeout(() => {
+        focusOnSelectedNode();
+        setNewNodeId(null); // Reset the newNodeId
+      }, 0);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [newNodeId, focusOnSelectedNode]);
+
+  // Listen for custom events to create new nodes
   useEffect(() => {
     const handleCreateNode = (event: CustomEvent) => {
       const { type } = event.detail;

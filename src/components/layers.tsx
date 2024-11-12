@@ -16,6 +16,23 @@ import { useCallback, useEffect, useState } from "react";
 import { Kbd } from "./ui/kbd";
 import { ScrollArea } from "./ui/scroll-area";
 
+// Custom event name for focusing
+const FOCUS_NODE_EVENT = "focusNode";
+
+/**
+ * Dispatch a custom event to focus a node
+ * @param nodeId
+ * @returns void
+ */
+export const dispatchFocusNodeEvent = (nodeId: string) => {
+  const event = new CustomEvent(FOCUS_NODE_EVENT, { detail: { nodeId } });
+  window.dispatchEvent(event);
+};
+
+/**
+ * Layers component
+ * @returns JSX.Element
+ */
 export const Layers = () => {
   const { selectedNodes, selectedEdges, selectNodes, clearSelection } =
     useSelection();
@@ -25,7 +42,6 @@ export const Layers = () => {
   );
 
   const nodes = useNodes();
-
   const { deleteElements } = useReactFlow();
 
   /**
@@ -54,6 +70,7 @@ export const Layers = () => {
   // Track shift key state
   const [isShiftPressed, setIsShiftPressed] = useState(false);
 
+  // Listen for shift key press
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey) setIsShiftPressed(true);
@@ -72,6 +89,11 @@ export const Layers = () => {
     };
   }, []);
 
+  /**
+   * Handle node click event
+   * @param nodeId
+   * @returns void
+   */
   const handleNodeClick = useCallback(
     (nodeId: string) => {
       selectNodes([nodeId], isShiftPressed);
@@ -126,6 +148,14 @@ export const Layers = () => {
   );
 };
 
+/**
+ * Layer item component
+ * @param node
+ * @param selected
+ * @param selectOnClick
+ * @param deleteOnClick
+ * @returns JSX.Element
+ */
 const LayerItem = ({
   node,
   selected,
@@ -139,6 +169,21 @@ const LayerItem = ({
 }) => {
   const name = node.data?.name || node.type;
 
+  /**
+   * Handle double click event
+   * Focus the node
+   * @param e
+   * @returns void
+   */
+  const handleDoubleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dispatchFocusNodeEvent(node.id);
+    },
+    [node.id],
+  );
+
   return (
     <div
       className={cn(
@@ -146,7 +191,11 @@ const LayerItem = ({
         selected && "bg-neutral-100",
       )}
     >
-      <span className="flex-1 px-2 py-1" onClick={selectOnClick}>
+      <span
+        className="flex-1 px-2 py-1"
+        onClick={selectOnClick}
+        onDoubleClick={handleDoubleClick}
+      >
         {name}
       </span>
 
