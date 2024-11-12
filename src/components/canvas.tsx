@@ -283,16 +283,9 @@ export const Canvas = () => {
     setNodes((nodes) => nodes.concat(newNode));
   };
 
-  const getNodeStructure = (node: Node) => ({
-    id: node.id,
-    type: node.type,
-    // Include other relevant structural properties, but NOT position
-    // e.g., type: node.type, connections: node.connections, etc.
-  });
-
   /**
    * Construct the flow graph
-   * @returns void
+   * @see src/hooks/use-flow-construction.tsx
    */
   useFlowConstruction({ nodes, edges });
 
