@@ -4,6 +4,10 @@ import { cn } from "@/lib/utils/class";
 import { useState } from "react";
 import { defaultNodePrefs } from "./canvas";
 
+/**
+ * Explorer component
+ * @returns JSX.Element
+ */
 export const Explorer = () => {
   const [selectedTab, setSelectedTab] = useState("Blocks");
   const { clearSelection } = useSelection();

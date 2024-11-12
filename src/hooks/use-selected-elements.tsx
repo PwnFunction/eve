@@ -1,5 +1,11 @@
 import { type Edge, type Node, useEdges, useNodes } from "@xyflow/react";
 
+/**
+ * Hook to get the selected elements from the selected node and edge ids.
+ * @param selectedNodes The selected node ids.
+ * @param selectedEdges The selected edge ids.
+ * @returns The selected node and edge elements.
+ */
 export const useSelectedElements = (
   selectedNodes: string[],
   selectedEdges: string[],

@@ -7,6 +7,7 @@ import { useEffect } from "react";
  * @returns void
  */
 export const useNodeFocusListener = (focusOnNode: (nodeId: string) => void) => {
+  // Listen for custom focusNode events
   useEffect(() => {
     const handleFocusEvent = (event: CustomEvent<{ nodeId: string }>) => {
       const { nodeId } = event.detail;

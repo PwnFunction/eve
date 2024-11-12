@@ -62,6 +62,7 @@ export const nodeTypes = {
   [NodeType.Output]: Output,
 } as const;
 
+// Default node preferences
 export const defaultNodePrefs = {
   EventStream: {
     name: "Event Stream",
@@ -82,6 +83,10 @@ export const defaultNodePrefs = {
   },
 };
 
+/**
+ * Canvas component for the flow graph
+ * @returns JSX.Element
+ */
 export const Canvas = () => {
   // React Flow states
   const reactFlowWrapper = useRef<HTMLDivElement>(null);

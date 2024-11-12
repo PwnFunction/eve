@@ -14,7 +14,7 @@ import { CircleAlert } from "lucide-react";
 export default function Home() {
   const { width } = useWindowSize();
 
-  // loading
+  // while width is loading
   if (typeof width === "undefined") {
     return null;
   }
@@ -22,22 +22,11 @@ export default function Home() {
   return width > 1080 ? (
     <ReactFlowProvider>
       <main className="grid h-screen text-sm" style={styles.parent}>
-        {/* Header */}
         <Header />
-
-        {/* Layers */}
         <Layers />
-
-        {/* Canvas */}
         <Canvas />
-
-        {/* Explorer */}
         <Explorer />
-
-        {/* Inspector */}
         <Inspector />
-
-        {/* Footer */}
         <Footer />
       </main>
     </ReactFlowProvider>

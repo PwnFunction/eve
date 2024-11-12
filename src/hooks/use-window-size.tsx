@@ -4,11 +4,16 @@ interface WindowSize {
   width: number | undefined;
 }
 
+/**
+ * Hook to get the window size
+ * @returns WindowSize
+ */
 export const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState<WindowSize>({
     width: undefined,
   });
 
+  // Set window size on resize
   useEffect(() => {
     function handleResize() {
       setWindowSize({

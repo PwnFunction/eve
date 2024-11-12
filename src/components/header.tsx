@@ -1,5 +1,9 @@
 import { styles } from "@/lib/styles/layout";
 
+/**
+ * Header component
+ * @returns JSX.Element
+ */
 export const Header = () => (
   <header
     className="flex select-none items-center border-b border-neutral-200 px-2"

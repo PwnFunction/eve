@@ -17,6 +17,10 @@ import { Kbd } from "./ui/kbd";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
+/**
+ * Inspector component for displaying node and edge properties
+ * @returns JSX.Element
+ */
 export const Inspector = () => {
   const { selectedNodes, selectedEdges } = useSelection();
   const { selectedNodeElements, selectedEdgeElements } = useSelectedElements(
@@ -72,6 +76,12 @@ export const Inspector = () => {
   );
 };
 
+/**
+ * Node inspector component
+ * @param node
+ * @param debugMode
+ * @returns JSX.Element
+ */
 const NodeInspector = ({
   node,
   debugMode,
@@ -81,6 +91,12 @@ const NodeInspector = ({
 }) => {
   const { setNodes } = useReactFlow();
 
+  /**
+   * Update node data
+   * @param key
+   * @param value
+   * @returns void
+   */
   const updateNodeData = useCallback(
     (key: string, value: string | number | boolean) => {
       setNodes((nodes) =>
@@ -162,6 +178,12 @@ const NodeInspector = ({
   );
 };
 
+/**
+ * Edge inspector component
+ * @param edge
+ * @param debugMode
+ * @returns JSX.Element
+ */
 const EdgeInspector = ({
   edge,
   debugMode,

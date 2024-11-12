@@ -29,6 +29,11 @@ const nonDOMProps = [
   "parentId",
 ] as const;
 
+/**
+ * Base component for blocks
+ * @param props
+ * @returns JSX.Element
+ */
 export const Base = ({
   className,
   children,

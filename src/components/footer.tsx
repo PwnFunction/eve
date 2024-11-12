@@ -4,9 +4,14 @@ import { styles } from "@/lib/styles/layout";
 import { Info } from "lucide-react";
 import { useEffect, useState } from "react";
 
+/**
+ * Footer component
+ * @returns JSX.Element
+ */
 export const Footer = () => {
   const [datetime, setDatetime] = useState<string | null>(null);
 
+  // Update the datetime every second
   useEffect(() => {
     setDatetime(new Date().toLocaleString());
 

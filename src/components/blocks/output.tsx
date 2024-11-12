@@ -5,6 +5,11 @@ export interface OutputProps extends NodeProps {
   data: { name: string; destination: string };
 }
 
+/**
+ * Output component - A block for outputting events
+ * @param props - OutputProps
+ * @returns JSX.Element
+ */
 export const Output = (props: OutputProps) => {
   const { name } = props.data;
 

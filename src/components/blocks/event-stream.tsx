@@ -10,6 +10,11 @@ export interface EventStreamProps extends NodeProps {
   };
 }
 
+/**
+ * EventStream component - A block for streaming events
+ * @param props - EventStreamProps
+ * @returns JSX.Element
+ */
 export const EventStream = (props: EventStreamProps) => {
   const { name } = props.data;
 
