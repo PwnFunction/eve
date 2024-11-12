@@ -332,26 +332,22 @@ export const Canvas = () => {
             <Button
               variant="outline"
               onClick={() => {
-                runtime?.start();
+                if (!isRunning) {
+                  runtime?.start();
+                } else {
+                  runtime?.stop();
+                }
               }}
-              disabled={isRunning}
+              disabled={nodes.length === 0}
             >
-              Start
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                runtime?.stop();
-              }}
-              disabled={!isRunning}
-            >
-              Stop
+              {!isRunning ? "Start" : "Stop"}
             </Button>
             <Button
               variant="outline"
               onClick={() => {
                 runtime?.reset();
               }}
+              disabled={nodes.length === 0}
             >
               Reset
             </Button>
