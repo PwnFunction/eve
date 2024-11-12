@@ -13,7 +13,6 @@ import { useFlowConstruction } from "@/hooks/use-flow-construction";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { Graph } from "@/lib/vm/graph";
-import { RXRuntime } from "@/lib/vm/runtime";
 import {
   addEdge,
   Background,
@@ -32,6 +31,7 @@ import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { EventStream, Output, Process, Queue } from "./blocks";
+import { Button } from "./ui/button";
 
 // Flow initial state
 const initialNodes: Node[] = [];
@@ -291,9 +291,11 @@ export const Canvas = () => {
    */
   const graph = new Graph(nodes, edges);
   const sortedIds = graph.topologicalSort();
-  const runtime = new RXRuntime(graph, sortedIds);
-
-  useFlowConstruction({ nodes, edges, runtime });
+  const { runtime, isRunning } = useFlowConstruction({
+    nodes,
+    edges,
+    sortedIds,
+  });
 
   return (
     <div className="flex h-full w-full" style={styles.centerPanel}>
@@ -326,6 +328,37 @@ export const Canvas = () => {
           </Panel>
           <Background color="#999" variant={BackgroundVariant.Dots} />
           <Controls />
+          <Panel position="top-right" className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                runtime?.start();
+              }}
+              disabled={isRunning}
+            >
+              Start
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                runtime?.stop();
+              }}
+              disabled={!isRunning}
+            >
+              Stop
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                runtime?.reset();
+              }}
+            >
+              Reset
+            </Button>
+          </Panel>
         </ReactFlow>
       </div>
 

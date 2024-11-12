@@ -1,56 +1,188 @@
-import { RXRuntime } from "@/lib/vm/runtime";
 import { type Edge, type Node } from "@xyflow/react";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { interval, Observable, Subject, Subscription } from "rxjs";
+import { delay, tap } from "rxjs/operators";
 
-/**
- * Check if two sets of nodes are structurally equal
- * @param prevNodes
- * @param newNodes
- * @returns boolean
- */
+export enum NodeType {
+  EventStream = "EventStream",
+  Queue = "Queue",
+  Process = "Process",
+  Output = "Output",
+}
+
+export class RXRuntime {
+  private nodes: Map<string, any> = new Map();
+  private subscriptions: Map<string, Subscription> = new Map();
+  private subjects: Map<string, Subject<any>> = new Map();
+  private sortedNodeIds: string[];
+  private graph: { nodes: Node[]; edges: Edge[] };
+  private _onStateChange?: (isRunning: boolean) => void;
+
+  constructor(
+    graph: { nodes: Node[]; edges: Edge[] },
+    sortedIds: string[],
+    onStateChange?: (isRunning: boolean) => void,
+  ) {
+    this.sortedNodeIds = sortedIds;
+    this.graph = graph;
+    this._onStateChange = onStateChange;
+    this.setupSubjects();
+  }
+
+  private _isRunning: boolean = false;
+  get isRunning(): boolean {
+    return this._isRunning;
+  }
+  private setIsRunning(value: boolean) {
+    this._isRunning = value;
+    this._onStateChange?.(value);
+  }
+
+  private setupSubjects() {
+    this.subjects.clear();
+    this.nodes.clear();
+
+    this.graph.nodes.forEach((node) => {
+      this.subjects.set(node.id, new Subject());
+      this.nodes.set(node.id, node);
+    });
+  }
+
+  private initializeRuntime() {
+    this.clearSubscriptions();
+
+    // First, set up event stream sources
+    this.sortedNodeIds.forEach((nodeId) => {
+      const node = this.nodes.get(nodeId);
+      if (node?.type === NodeType.EventStream) {
+        const subject = this.subjects.get(nodeId);
+        if (subject) {
+          console.log(`Setting up event stream for ${node.data.name}`);
+          const subscription = interval(node.data.frequency).subscribe(
+            (value) => {
+              console.log(`[${node.data.name}] Emitting:`, value);
+              subject.next(value);
+            },
+          );
+          this.subscriptions.set(`${nodeId}-source`, subscription);
+        }
+      }
+    });
+
+    // Then set up the connections between nodes
+    this.graph.edges.forEach((edge) => {
+      const sourceNode = this.nodes.get(edge.source);
+      const targetNode = this.nodes.get(edge.target);
+      const sourceSubject = this.subjects.get(edge.source);
+      const targetSubject = this.subjects.get(edge.target);
+
+      if (!sourceNode || !targetNode || !sourceSubject || !targetSubject) {
+        return;
+      }
+
+      let observable: Observable<any>;
+
+      switch (sourceNode.type) {
+        case NodeType.Process:
+          observable = sourceSubject.pipe(
+            delay(sourceNode.data.delay),
+            tap((value) => {
+              console.log(`[${sourceNode.data.name}] Processing:`, value);
+            }),
+          );
+          break;
+
+        case NodeType.Queue:
+          observable = sourceSubject.pipe(
+            tap((value) => {
+              console.log(`[${sourceNode.data.name}] Queued:`, value);
+            }),
+          );
+          break;
+
+        default:
+          observable = sourceSubject;
+      }
+
+      const subscription = observable.subscribe({
+        next: (value) => {
+          if (targetNode.type === NodeType.Output) {
+            console.log(`[${targetNode.data.name}] Output:`, value);
+          }
+          targetSubject.next(value);
+        },
+        error: (err) => {
+          console.error(`Error in node ${sourceNode.data.name}:`, err);
+          targetSubject.error(err);
+        },
+      });
+
+      this.subscriptions.set(`${edge.source}-${edge.target}`, subscription);
+    });
+  }
+
+  private clearSubscriptions() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.subscriptions.clear();
+  }
+
+  public start() {
+    if (!this.isRunning) {
+      console.log("Starting flow...");
+      this.initializeRuntime();
+      this.setIsRunning(true);
+    }
+  }
+
+  public stop() {
+    if (this.isRunning) {
+      console.log("Stopping flow...");
+      this.clearSubscriptions();
+      this.setIsRunning(false);
+    }
+  }
+
+  public reset() {
+    console.log("Resetting flow...");
+    this.stop();
+    this.subjects.forEach((subject) => subject.complete());
+    this.setupSubjects();
+  }
+
+  public isActive(): boolean {
+    return this.isRunning;
+  }
+}
+
 const areNodesStructurallyEqual = (prevNodes: Node[], newNodes: Node[]) => {
   if (prevNodes.length !== newNodes.length) return false;
-
   const prevStructure = new Set(
     prevNodes.map((node) => `${node.id}-${node.type}`),
   );
-
   return newNodes.every((node) => prevStructure.has(`${node.id}-${node.type}`));
 };
 
-/**
- * Check if two sets of edges are equal
- * @param prevEdges
- * @param newEdges
- * @returns boolean
- */
 const areEdgesEqual = (prevEdges: Edge[], newEdges: Edge[]) => {
   if (prevEdges.length !== newEdges.length) return false;
-
   const prevEdgeSet = new Set(
     prevEdges.map((edge) => `${edge.source}-${edge.target}`),
   );
-
   return newEdges.every((edge) =>
     prevEdgeSet.has(`${edge.source}-${edge.target}`),
   );
 };
 
-/**
- * Hook to construct flow graph on changes
- * @param nodes
- * @param edges
- * @returns void
- */
 export const useFlowConstruction = ({
   nodes,
   edges,
-  runtime,
+  sortedIds,
 }: {
   nodes: Node[];
   edges: Edge[];
-  runtime: RXRuntime;
+  sortedIds: string[];
 }) => {
+  const [runtime, setRuntime] = useState<RXRuntime | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
   const prevNodesRef = useRef(nodes);
   const prevEdgesRef = useRef(edges);
 
@@ -63,10 +195,19 @@ export const useFlowConstruction = ({
 
     if (hasNodesChanged || hasEdgesChanged) {
       try {
-        // Rebuild the graph representation inside the runtime
-        runtime.build();
+        // Clean up existing runtime
+        runtime?.reset();
 
-        // Only update refs if build was successful
+        // Create new runtime with state change callback
+        const newRuntime = new RXRuntime(
+          { nodes, edges },
+          sortedIds,
+          (running) => setIsRunning(running),
+        );
+        setRuntime(newRuntime);
+        setIsRunning(false);
+
+        // Update refs
         prevNodesRef.current = nodes;
         prevEdgesRef.current = edges;
       } catch (error) {
@@ -75,11 +216,18 @@ export const useFlowConstruction = ({
         }
       }
     }
-  }, [nodes, edges]);
+  }, [nodes, edges, sortedIds, runtime]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      runtime?.reset();
+    };
+  }, [runtime]);
 
   useEffect(() => {
     constructFlow();
   }, [constructFlow]);
 
-  return constructFlow;
+  return { runtime, isRunning, constructFlow };
 };
