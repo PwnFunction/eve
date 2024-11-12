@@ -51,3 +51,4 @@
 - [ ] auto scroll in layers on new node creation
 - [ ] debug on eventstream block should show live event stream
 - [ ] output nodes can have graphs?
+- [ ] add frequency / unit to eventstream block (ms, s, m, h, d)
