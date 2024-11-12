@@ -2,6 +2,12 @@ import { RXRuntime } from "@/lib/vm/runtime";
 import { type Edge, type Node } from "@xyflow/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+/**
+ * Compare nodes by id and type
+ * @param prevNodes
+ * @param newNodes
+ * @returns boolean
+ */
 const areNodesStructurallyEqual = (prevNodes: Node[], newNodes: Node[]) => {
   if (prevNodes.length !== newNodes.length) return false;
   const prevStructure = new Set(
@@ -10,6 +16,12 @@ const areNodesStructurallyEqual = (prevNodes: Node[], newNodes: Node[]) => {
   return newNodes.every((node) => prevStructure.has(`${node.id}-${node.type}`));
 };
 
+/**
+ * Compare edges by source and target
+ * @param prevEdges
+ * @param newEdges
+ * @returns boolean
+ */
 const areEdgesEqual = (prevEdges: Edge[], newEdges: Edge[]) => {
   if (prevEdges.length !== newEdges.length) return false;
   const prevEdgeSet = new Set(
@@ -20,6 +32,13 @@ const areEdgesEqual = (prevEdges: Edge[], newEdges: Edge[]) => {
   );
 };
 
+/**
+ * Hook to construct and manage the flow runtime
+ * @param nodes
+ * @param edges
+ * @param sortedIds - topologically sorted node ids
+ * @returns runtime, isRunning, constructFlow
+ */
 export const useFlowConstruction = ({
   nodes,
   edges,

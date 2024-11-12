@@ -331,7 +331,6 @@ export const Canvas = () => {
           <Panel position="top-right" className="flex gap-2">
             <Button
               variant="outline"
-              size="sm"
               onClick={() => {
                 runtime?.start();
               }}
@@ -341,7 +340,6 @@ export const Canvas = () => {
             </Button>
             <Button
               variant="outline"
-              size="sm"
               onClick={() => {
                 runtime?.stop();
               }}
@@ -351,7 +349,6 @@ export const Canvas = () => {
             </Button>
             <Button
               variant="outline"
-              size="sm"
               onClick={() => {
                 runtime?.reset();
               }}

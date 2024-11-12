@@ -10,6 +10,9 @@ export enum NodeType {
   Output = "Output",
 }
 
+/**
+ * The runtime class that manages the execution of the flow graph
+ */
 export class RXRuntime {
   private nodes: Map<string, any> = new Map();
   private subscriptions: Map<string, Subscription> = new Map();
@@ -18,6 +21,12 @@ export class RXRuntime {
   private graph: { nodes: Node[]; edges: Edge[] };
   private _onStateChange?: (isRunning: boolean) => void;
 
+  /**
+   * Creates a new runtime instance
+   * @param {Object} graph - The graph object containing nodes and edges
+   * @param {string[]} sortedIds - Topologically sorted node IDs
+   * @param {Function} onStateChange - Callback function to call when the
+   */
   constructor(
     graph: { nodes: Node[]; edges: Edge[] },
     sortedIds: string[],
@@ -30,14 +39,29 @@ export class RXRuntime {
   }
 
   private _isRunning: boolean = false;
+
+  /**
+   * Returns whether the runtime is currently running
+   * @returns {boolean}
+   */
   get isRunning(): boolean {
     return this._isRunning;
   }
+
+  /**
+   * Sets the isRunning flag and calls the onStateChange callback
+   * @param {boolean} value - The new value of the isRunning flag
+   * @returns {void}
+   */
   private setIsRunning(value: boolean) {
     this._isRunning = value;
     this._onStateChange?.(value);
   }
 
+  /**
+   * Sets up subjects for each node in the graph
+   * @returns {void}
+   */
   private setupSubjects() {
     this.subjects.clear();
     this.nodes.clear();
@@ -48,6 +72,11 @@ export class RXRuntime {
     });
   }
 
+  /**
+   * Initializes the runtime by setting up event streams and connections
+   * between nodes
+   * @returns {void}
+   */
   private initializeRuntime() {
     this.clearSubscriptions();
 
@@ -121,11 +150,20 @@ export class RXRuntime {
     });
   }
 
+  /**
+   * Clears all subscriptions
+   * @returns {void}
+   */
   private clearSubscriptions() {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.subscriptions.clear();
   }
 
+  /**
+   * Starts the runtime by initializing the runtime and setting the
+   * isRunning flag to true
+   * @returns {void}
+   */
   public start() {
     if (!this.isRunning) {
       console.log("Starting flow...");
@@ -134,6 +172,10 @@ export class RXRuntime {
     }
   }
 
+  /**
+   * Stops the runtime by clearing all subscriptions
+   * @returns {void}
+   */
   public stop() {
     if (this.isRunning) {
       console.log("Stopping flow...");
@@ -142,6 +184,11 @@ export class RXRuntime {
     }
   }
 
+  /**
+   * Resets the runtime by stopping it and clearing all subjects
+   * and subscriptions
+   * @returns {void}
+   */
   public reset() {
     console.log("Resetting flow...");
     this.stop();
@@ -149,6 +196,10 @@ export class RXRuntime {
     this.setupSubjects();
   }
 
+  /**
+   * Returns whether the runtime is currently active (running)
+   * @returns {boolean}
+   */
   public isActive(): boolean {
     return this.isRunning;
   }
