@@ -1,3 +1,3 @@
 # Eve
 
-Simulator for building generic event streaming systems.
+Simulate generic event streaming systems.
