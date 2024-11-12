@@ -2,6 +2,7 @@
 
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -87,7 +88,9 @@ export const Canvas = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const { selectedNodes, selectedEdges, clearSelection } = useSelection();
 
-  const [showDialog, setShowDialog] = useState(false);
+  const [showCycleDetectionDialog, setShowCycleDetectionDialog] =
+    useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   /**
    * Create a new node
@@ -227,7 +230,7 @@ export const Canvas = () => {
           addEdge({ ...connection, animated: true }, prevEdges),
         );
       } else {
-        setShowDialog(true);
+        setShowCycleDetectionDialog(true);
       }
     },
     [setEdges, hasCycle],
@@ -283,6 +286,15 @@ export const Canvas = () => {
     };
 
     setNodes((nodes) => nodes.concat(newNode));
+  };
+
+  /**
+   * Reset the flow graph
+   * @returns void
+   */
+  const resetFlow = () => {
+    setNodes([]);
+    setEdges([]);
   };
 
   /**
@@ -344,9 +356,7 @@ export const Canvas = () => {
             </Button>
             <Button
               variant="outline"
-              onClick={() => {
-                runtime?.reset();
-              }}
+              onClick={() => setShowResetDialog(true)}
               disabled={nodes.length === 0}
             >
               Reset
@@ -356,7 +366,10 @@ export const Canvas = () => {
       </div>
 
       {/* Dialogs */}
-      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+      <AlertDialog
+        open={showCycleDetectionDialog}
+        onOpenChange={setShowCycleDetectionDialog}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-red-600">
@@ -369,6 +382,31 @@ export const Canvas = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-600">
+              Are you sure you want to reset the flow?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete all
+              nodes and connections in the flow.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                runtime?.reset();
+                resetFlow();
+              }}
+            >
+              Reset
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
