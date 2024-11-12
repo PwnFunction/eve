@@ -1,4 +1,3 @@
-import { Graph } from "@/lib/vm/graph";
 import { RXRuntime } from "@/lib/vm/runtime";
 import { type Edge, type Node } from "@xyflow/react";
 import { useCallback, useEffect, useRef } from "react";
@@ -38,7 +37,7 @@ const areEdgesEqual = (prevEdges: Edge[], newEdges: Edge[]) => {
 };
 
 /**
- * Hook to construct flow graph
+ * Hook to construct flow graph on changes
  * @param nodes
  * @param edges
  * @returns void
@@ -46,9 +45,11 @@ const areEdgesEqual = (prevEdges: Edge[], newEdges: Edge[]) => {
 export const useFlowConstruction = ({
   nodes,
   edges,
+  runtime,
 }: {
   nodes: Node[];
   edges: Edge[];
+  runtime: RXRuntime;
 }) => {
   const prevNodesRef = useRef(nodes);
   const prevEdgesRef = useRef(edges);
@@ -61,12 +62,8 @@ export const useFlowConstruction = ({
     const hasEdgesChanged = !areEdgesEqual(prevEdgesRef.current, edges);
 
     if (hasNodesChanged || hasEdgesChanged) {
-      console.log("Analyzing flow graph...");
       try {
-        const graph = new Graph(nodes, edges);
-        const sortedIds = graph.topologicalSort();
-
-        const runtime = new RXRuntime(graph, sortedIds);
+        // Rebuild the graph representation inside the runtime
         runtime.build();
 
         // Only update refs if build was successful

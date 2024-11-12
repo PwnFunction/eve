@@ -12,6 +12,8 @@ import {
 import { useFlowConstruction } from "@/hooks/use-flow-construction";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
+import { Graph } from "@/lib/vm/graph";
+import { RXRuntime } from "@/lib/vm/runtime";
 import {
   addEdge,
   Background,
@@ -287,7 +289,11 @@ export const Canvas = () => {
    * Construct the flow graph
    * @see src/hooks/use-flow-construction.tsx
    */
-  useFlowConstruction({ nodes, edges });
+  const graph = new Graph(nodes, edges);
+  const sortedIds = graph.topologicalSort();
+  const runtime = new RXRuntime(graph, sortedIds);
+
+  useFlowConstruction({ nodes, edges, runtime });
 
   return (
     <div className="flex h-full w-full" style={styles.centerPanel}>

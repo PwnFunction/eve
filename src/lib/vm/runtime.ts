@@ -6,7 +6,7 @@ import {
 } from "@/components/blocks";
 import { NodeType } from "@/components/canvas";
 import { type Edge } from "@xyflow/react";
-import { interval, Subject } from "rxjs";
+import { interval, Observable, Subject } from "rxjs";
 import { Graph } from "./graph";
 
 /**
@@ -79,12 +79,6 @@ export class RXRuntime {
         .filter((edge) => edge.target === nodeId)
         .forEach((edge) => this.connectComponents(edge));
     });
-
-    // console.log("-------------");
-    // console.log(this.componentEdges);
-    // console.log("-------------");
-
-    // Third pass: confirm all connections
   }
 
   /**
@@ -135,42 +129,51 @@ export class RXRuntime {
   }
 
   /**
+   * Store component and return it
+   * @param id string
+   * @param component Observable<any> | Subject<any>
+   */
+  private registerComponent<T>(id: string, component: T): T {
+    this.components.set(id, component);
+    return component;
+  }
+
+  /**
    * Create an event stream
    * @param node EventStreamProps
-   * @returns void
+   * @returns Observable<number>
    */
-  createEventStream(node: EventStreamProps) {
-    const eventStream = interval(node.data.frequency || 1000);
-    this.components.set(node.id, eventStream);
+  createEventStream(node: EventStreamProps): Observable<number> {
+    return this.registerComponent(
+      node.id,
+      interval(node.data.frequency || 1000),
+    );
   }
 
   /**
    * Create a queue
    * @param node QueueProps
-   * @returns void
+   * @returns Subject<any>
    */
-  createQueue(node: QueueProps) {
-    const queue = new Subject();
-    this.components.set(node.id, queue);
+  createQueue(node: QueueProps): Subject<any> {
+    return this.registerComponent(node.id, new Subject());
   }
 
   /**
    * Create a process
    * @param node ProcessProps
-   * @returns void
+   * @returns Subject<any>
    */
-  createProcess(node: ProcessProps) {
-    const process = new Subject();
-    this.components.set(node.id, process);
+  createProcess(node: ProcessProps): Subject<any> {
+    return this.registerComponent(node.id, new Subject());
   }
 
   /**
    * Create an output
    * @param node OutputProps
-   * @returns void
+   * @returns Subject<any>
    */
-  createOutput(node: OutputProps) {
-    const output = new Subject();
-    this.components.set(node.id, output);
+  createOutput(node: OutputProps): Subject<any> {
+    return this.registerComponent(node.id, new Subject());
   }
 }
