@@ -24,6 +24,7 @@ import {
   SelectionMode,
   useEdgesState,
   useNodesState,
+  useReactFlow,
   type Connection,
   type Edge,
   type Node,
@@ -82,15 +83,57 @@ export const defaultNodePrefs = {
 };
 
 export const Canvas = () => {
+  // React Flow states
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const { selectedNodes, selectedEdges, clearSelection } = useSelection();
+  const { setCenter, getNode } = useReactFlow();
 
+  // Dialog states
   const [showCycleDetectionDialog, setShowCycleDetectionDialog] =
     useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
+
+  /**
+   * Focus on the selected node
+   */
+  const focusOnSelectedNode = useCallback(() => {
+    // If there are selected nodes, focus on the first one
+    if (selectedNodes.length > 0) {
+      const selectedNode = getNode(selectedNodes[0]);
+
+      if (selectedNode) {
+        setCenter(selectedNode.position.x, selectedNode.position.y, {
+          zoom: 1.5,
+          duration: 800,
+        });
+      }
+    }
+  }, [selectedNodes, setCenter, getNode]);
+
+  /**
+   * Handle key press events
+   * @param event
+   * @returns void
+   */
+  const handleKeyPress = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === "f") {
+        event.preventDefault();
+        focusOnSelectedNode();
+      }
+    },
+    [focusOnSelectedNode],
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   /**
    * Create a new node
