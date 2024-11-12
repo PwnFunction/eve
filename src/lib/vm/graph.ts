@@ -97,18 +97,4 @@ export class Graph {
 
     return sorted.reverse();
   }
-
-  /**
-   * Print sorted nodes
-   * @returns void
-   */
-  printSortedNodes(): void {
-    const sorted = this.topologicalSort();
-    sorted.forEach((id) => {
-      const node = this.nodes.find((n) => n.id === id);
-      if (node) {
-        console.log(node.id, node.type);
-      }
-    });
-  }
 }
