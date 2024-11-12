@@ -33,7 +33,13 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Batch, EventStream, Output, Process } from "./blocks";
+import {
+  Batch,
+  defaultNodePrefs,
+  EventStream,
+  Output,
+  Process,
+} from "./blocks";
 import { Button } from "./ui/button";
 
 // Flow initial state
@@ -61,27 +67,6 @@ export const nodeTypes = {
   [NodeType.Process]: Process,
   [NodeType.Output]: Output,
 } as const;
-
-// Default node preferences
-export const defaultNodePrefs = {
-  EventStream: {
-    name: "Event Stream",
-    frequency: 1000,
-    unit: "events",
-    throttle: false,
-  },
-  Batch: {
-    name: "Batch",
-    size: 10,
-  },
-  Process: {
-    name: "Process",
-    delay: 1000,
-  },
-  Output: {
-    name: "Output",
-  },
-};
 
 /**
  * Canvas component for the flow graph

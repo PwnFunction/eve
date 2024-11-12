@@ -2,7 +2,7 @@ import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { useState } from "react";
-import { defaultNodePrefs } from "./canvas";
+import { defaultNodePrefs } from "./blocks";
 
 /**
  * Explorer component
