@@ -3,17 +3,55 @@ import { type Edge, type Node } from "@xyflow/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Compare nodes by id and type
+ * Compare nodes by id, type, and data
  * @param prevNodes
  * @param newNodes
  * @returns boolean
  */
-const areNodesStructurallyEqual = (prevNodes: Node[], newNodes: Node[]) => {
+const areNodesEqual = (prevNodes: Node[], newNodes: Node[]) => {
   if (prevNodes.length !== newNodes.length) return false;
-  const prevStructure = new Set(
-    prevNodes.map((node) => `${node.id}-${node.type}`),
-  );
-  return newNodes.every((node) => prevStructure.has(`${node.id}-${node.type}`));
+
+  // Create a map of previous nodes for faster lookup
+  const prevNodesMap = new Map(prevNodes.map((node) => [node.id, node]));
+
+  return newNodes.every((newNode) => {
+    const prevNode = prevNodesMap.get(newNode.id);
+
+    // Check if node exists and has same type
+    if (!prevNode || prevNode.type !== newNode.type) {
+      return false;
+    }
+
+    // Compare data properties that affect runtime behavior
+    const prevData = prevNode.data;
+    const newData = newNode.data;
+
+    // Check specific properties based on node type
+    switch (newNode.type) {
+      case "EventStream":
+        return (
+          prevData.frequency === newData.frequency &&
+          prevData.throttle === newData.throttle
+        );
+
+      case "Process":
+        return prevData.delay === newData.delay;
+
+      case "Queue":
+        return (
+          prevData.max === newData.max &&
+          prevData.broadcast === newData.broadcast
+        );
+
+      case "Output":
+        // Output nodes don't have runtime-specific data to compare
+        return true;
+
+      default:
+        // For unknown node types, compare full data object
+        return JSON.stringify(prevData) === JSON.stringify(newData);
+    }
+  });
 };
 
 /**
@@ -54,10 +92,7 @@ export const useFlowConstruction = ({
   const prevEdgesRef = useRef(edges);
 
   const constructFlow = useCallback(() => {
-    const hasNodesChanged = !areNodesStructurallyEqual(
-      prevNodesRef.current,
-      nodes,
-    );
+    const hasNodesChanged = !areNodesEqual(prevNodesRef.current, nodes);
     const hasEdgesChanged = !areEdgesEqual(prevEdgesRef.current, edges);
 
     if (hasNodesChanged || hasEdgesChanged) {
