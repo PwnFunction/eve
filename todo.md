@@ -52,3 +52,4 @@
 - [ ] debug on eventstream block should show live event stream
 - [ ] output nodes can have graphs?
 - [ ] add frequency / unit to eventstream block (ms, s, m, h, d)
+- [ ] add shortcut helper modal and also show shortcuts in the footer
