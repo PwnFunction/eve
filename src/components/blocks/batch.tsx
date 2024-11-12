@@ -1,11 +1,11 @@
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
-export interface QueueProps extends NodeProps {
-  data: { name: string; max: number; broadcast: boolean };
+export interface BatchProps extends NodeProps {
+  data: { name: string; size: number };
 }
 
-export const Queue = (props: QueueProps) => {
+export const Batch = (props: BatchProps) => {
   const { name } = props.data;
 
   return (

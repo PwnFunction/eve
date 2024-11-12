@@ -37,11 +37,8 @@ const areNodesEqual = (prevNodes: Node[], newNodes: Node[]) => {
       case "Process":
         return prevData.delay === newData.delay;
 
-      case "Queue":
-        return (
-          prevData.max === newData.max &&
-          prevData.broadcast === newData.broadcast
-        );
+      case "Batch":
+        return prevData.size === newData.size;
 
       case "Output":
         // Output nodes don't have runtime-specific data to compare

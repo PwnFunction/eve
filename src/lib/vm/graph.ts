@@ -1,8 +1,8 @@
 import {
+  BatchProps,
   EventStreamProps,
   OutputProps,
   ProcessProps,
-  QueueProps,
 } from "@/components/blocks";
 import { NodeType } from "@/components/canvas";
 import { type Edge, type Node } from "@xyflow/react";
@@ -10,7 +10,7 @@ import { type Edge, type Node } from "@xyflow/react";
 export type EveNode =
   | Node
   | EventStreamProps
-  | QueueProps
+  | BatchProps
   | ProcessProps
   | OutputProps;
 

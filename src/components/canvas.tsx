@@ -33,7 +33,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { EventStream, Output, Process, Queue } from "./blocks";
+import { Batch, EventStream, Output, Process } from "./blocks";
 import { Button } from "./ui/button";
 
 // Flow initial state
@@ -51,13 +51,13 @@ const fitViewOptions = {
 // Node types
 export enum NodeType {
   EventStream = "EventStream",
-  Queue = "Queue",
+  Batch = "Batch",
   Process = "Process",
   Output = "Output",
 }
 export const nodeTypes = {
   [NodeType.EventStream]: EventStream,
-  [NodeType.Queue]: Queue,
+  [NodeType.Batch]: Batch,
   [NodeType.Process]: Process,
   [NodeType.Output]: Output,
 } as const;
@@ -69,10 +69,9 @@ export const defaultNodePrefs = {
     unit: "events",
     throttle: false,
   },
-  Queue: {
-    name: "Queue",
-    max: 100,
-    broadcast: false,
+  Batch: {
+    name: "Batch",
+    size: 10,
   },
   Process: {
     name: "Process",

@@ -1,11 +1,11 @@
 import { type Edge, type Node } from "@xyflow/react";
 import { interval, Observable, Subject, Subscription } from "rxjs";
-import { delay, tap } from "rxjs/operators";
+import { bufferCount, delay, tap } from "rxjs/operators";
 
 // Define the types of nodes we support
 export enum NodeType {
   EventStream = "EventStream",
-  Queue = "Queue",
+  Batch = "Batch",
   Process = "Process",
   Output = "Output",
 }
@@ -121,10 +121,11 @@ export class RXRuntime {
           );
           break;
 
-        case NodeType.Queue:
+        case NodeType.Batch:
           observable = sourceSubject.pipe(
-            tap((value) => {
-              console.log(`[${sourceNode.data.name}] Queued:`, value);
+            bufferCount(sourceNode.data.size),
+            tap((values) => {
+              console.log(`[${sourceNode.data.name}] Batching:`, values);
             }),
           );
           break;
