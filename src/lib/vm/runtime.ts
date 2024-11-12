@@ -80,9 +80,9 @@ export class RXRuntime {
         .forEach((edge) => this.connectComponents(edge));
     });
 
-    console.log("-------------");
-    console.log(this.componentEdges);
-    console.log("-------------");
+    // console.log("-------------");
+    // console.log(this.componentEdges);
+    // console.log("-------------");
 
     // Third pass: confirm all connections
   }
@@ -118,7 +118,19 @@ export class RXRuntime {
       return;
     }
 
-    // Connect the components together
+    // setup output node
+    if (
+      this.graph.nodes.filter((n) => n.id == edge.target).pop()?.type ===
+      NodeType.Output
+    ) {
+      target.subscribe((event: any) => {
+        console.log("Output:", event);
+      });
+    }
+
+    source.subscribe(target);
+
+    // add edge to componentEdges
     this.componentEdges.push(edge);
   }
 

@@ -9,10 +9,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useFlowConstruction } from "@/hooks/use-flow-construction";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
-import { Graph } from "@/lib/vm/graph";
-import { RXRuntime } from "@/lib/vm/runtime";
 import {
   addEdge,
   Background,
@@ -284,27 +283,18 @@ export const Canvas = () => {
     setNodes((nodes) => nodes.concat(newNode));
   };
 
+  const getNodeStructure = (node: Node) => ({
+    id: node.id,
+    type: node.type,
+    // Include other relevant structural properties, but NOT position
+    // e.g., type: node.type, connections: node.connections, etc.
+  });
+
   /**
-   * Analyze the flow graph
+   * Construct the flow graph
    * @returns void
    */
-  const constructFlow = useCallback(() => {
-    try {
-      const graph = new Graph(nodes, edges);
-      const sortedIds = graph.topologicalSort();
-
-      const runtime = new RXRuntime(graph, sortedIds);
-      runtime.build();
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Build Error:", error.message);
-      }
-    }
-  }, [nodes, edges]);
-
-  useEffect(() => {
-    constructFlow();
-  }, [constructFlow]);
+  useFlowConstruction({ nodes, edges });
 
   return (
     <div className="flex h-full w-full" style={styles.centerPanel}>
