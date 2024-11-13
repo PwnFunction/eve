@@ -221,9 +221,7 @@ export const Canvas = () => {
     };
   }, [createNode]);
 
-  /**
-   * Handle delete key press on selected nodes
-   */
+  // Handle delete key press
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Delete") {
@@ -262,6 +260,41 @@ export const Canvas = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedNodes, selectedEdges, setNodes, setEdges, clearSelection]);
+
+  // Add this alongside your existing deleteNode event listener in the useEffect
+  useEffect(() => {
+    const handleDeleteNode = (event: CustomEvent) => {
+      const { nodeId } = event.detail;
+      setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+      setEdges((eds) =>
+        eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
+      );
+    };
+
+    const handleRemoveConnections = (event: CustomEvent) => {
+      const { nodeId } = event.detail;
+      setEdges((eds) =>
+        eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
+      );
+    };
+
+    window.addEventListener("deleteNode", handleDeleteNode as EventListener);
+    window.addEventListener(
+      "removeConnections",
+      handleRemoveConnections as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "deleteNode",
+        handleDeleteNode as EventListener,
+      );
+      window.removeEventListener(
+        "removeConnections",
+        handleRemoveConnections as EventListener,
+      );
+    };
+  }, [setNodes, setEdges]);
 
   /**
    * Check if adding a new edge would create a cycle
