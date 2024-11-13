@@ -1,3 +1,4 @@
+import { truncateString } from "@/lib/utils/truncate";
 import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
@@ -15,7 +16,7 @@ export const Output = (props: OutputProps) => {
 
   return (
     <Base rightHandle={false} {...props}>
-      <p>{name}</p>
+      <p>{truncateString(name)}</p>
     </Base>
   );
 };

@@ -128,7 +128,16 @@ export const Canvas = () => {
    */
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() === "f") {
+      // Check if the active element is an input field or contenteditable element
+      const activeElement = document.activeElement;
+      const isEditingText =
+        activeElement instanceof HTMLElement &&
+        (activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          activeElement.isContentEditable);
+
+      // Only handle 'F' key press if not editing text
+      if (!isEditingText && event.key.toLowerCase() === "f") {
         event.preventDefault();
         focusOnSelectedNode();
       }

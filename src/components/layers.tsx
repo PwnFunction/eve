@@ -10,6 +10,7 @@ import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
+import { truncateString } from "@/lib/utils/truncate";
 import { useNodes, useReactFlow } from "@xyflow/react";
 import { Trash, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -196,7 +197,7 @@ const LayerItem = ({
         onClick={selectOnClick}
         onDoubleClick={handleDoubleClick}
       >
-        {name}
+        {truncateString(name)}
       </span>
 
       <div
