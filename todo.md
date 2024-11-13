@@ -53,3 +53,11 @@
 - [ ] output nodes can have graphs?
 - [ ] add frequency / unit to eventstream block (ms, s, m, h, d)
 - [ ] add shortcut helper modal and also show shortcuts in the footer
+- [ ] add auto graph formatting
+- [ ] disable focusing while on input fields
+- [ ] share feature
+- [ ] toggle interactive bug, can add nodes and edges even on lock
+- [ ] layer item truncate name
+- [ ] rename layers panel
+- [ ] collapisble grid segments such that canvas can be full screen
+- [ ] cta to create nodes maybe in layers?
