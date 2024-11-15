@@ -59,3 +59,4 @@
 - [ ] rename layers panel
 - [ ] collapisble grid segments such that canvas can be full screen
 - [ ] cta to create nodes maybe in layers?
+- [ ] delete middle node preference in global setting
