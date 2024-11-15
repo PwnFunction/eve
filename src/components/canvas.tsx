@@ -13,6 +13,7 @@ import {
 import { useFlowConstruction } from "@/hooks/use-flow-construction";
 import { useNodeFocusListener } from "@/hooks/use-node-focus-listener";
 import { useSelection } from "@/hooks/use-selection";
+import { CustomEvents } from "@/lib/constants/custom-events";
 import { styles } from "@/lib/styles/layout";
 import { Graph } from "@/lib/vm/graph";
 import {
@@ -212,10 +213,13 @@ export const Canvas = () => {
       createNode(type);
     };
 
-    window.addEventListener("createNode", handleCreateNode as EventListener);
+    window.addEventListener(
+      CustomEvents.CreateNode,
+      handleCreateNode as EventListener,
+    );
     return () => {
       window.removeEventListener(
-        "createNode",
+        CustomEvents.CreateNode,
         handleCreateNode as EventListener,
       );
     };
@@ -278,19 +282,22 @@ export const Canvas = () => {
       );
     };
 
-    window.addEventListener("deleteNode", handleDeleteNode as EventListener);
     window.addEventListener(
-      "removeConnections",
+      CustomEvents.DeleteNode,
+      handleDeleteNode as EventListener,
+    );
+    window.addEventListener(
+      CustomEvents.RemoveConnections,
       handleRemoveConnections as EventListener,
     );
 
     return () => {
       window.removeEventListener(
-        "deleteNode",
+        CustomEvents.DeleteNode,
         handleDeleteNode as EventListener,
       );
       window.removeEventListener(
-        "removeConnections",
+        CustomEvents.RemoveConnections,
         handleRemoveConnections as EventListener,
       );
     };

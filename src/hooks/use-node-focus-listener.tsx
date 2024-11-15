@@ -1,4 +1,5 @@
 // hooks/use-node-focus.ts
+import { CustomEvents } from "@/lib/constants/custom-events";
 import { useEffect } from "react";
 
 /**
@@ -14,10 +15,13 @@ export const useNodeFocusListener = (focusOnNode: (nodeId: string) => void) => {
       focusOnNode(nodeId);
     };
 
-    window.addEventListener("focusNode", handleFocusEvent as EventListener);
+    window.addEventListener(
+      CustomEvents.FocusNode,
+      handleFocusEvent as EventListener,
+    );
     return () => {
       window.removeEventListener(
-        "focusNode",
+        CustomEvents.FocusNode,
         handleFocusEvent as EventListener,
       );
     };
