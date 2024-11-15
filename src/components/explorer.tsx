@@ -4,6 +4,7 @@ import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { useState } from "react";
 import { defaultNodePrefs } from "./blocks";
+import Logs from "./logs";
 
 /**
  * Explorer component
@@ -80,15 +81,5 @@ export const Explorer = () => {
         <Logs />
       )}
     </section>
-  );
-};
-
-const Logs = () => {
-  return (
-    <div className="flex-1 p-2 font-mono text-neutral-500">
-      <pre>
-        {`[2021-09-02T15:00:00Z] INFO: Created Event Stream\n[2021-09-02T15:00:01Z] INFO: Created Generic Node`}
-      </pre>
-    </div>
   );
 };

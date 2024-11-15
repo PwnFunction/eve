@@ -1,3 +1,4 @@
+import { logger } from "@/lib/utils/logger";
 import { RXRuntime } from "@/lib/vm/runtime";
 import { type Edge, type Node } from "@xyflow/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -111,7 +112,7 @@ export const useFlowConstruction = ({
         prevEdgesRef.current = edges;
       } catch (error) {
         if (error instanceof Error) {
-          console.error("Build Error:", error.message);
+          logger.error("Failed to build flow", { reason: error.message });
         }
       }
     }

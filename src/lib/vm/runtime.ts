@@ -1,6 +1,7 @@
 import { type Edge, type Node } from "@xyflow/react";
 import { interval, Observable, Subject, Subscription } from "rxjs";
 import { bufferCount, delay, tap } from "rxjs/operators";
+import { logger } from "../utils/logger";
 
 // Define the types of nodes we support
 export enum NodeType {
@@ -86,10 +87,11 @@ export class RXRuntime {
       if (node?.type === NodeType.EventStream) {
         const subject = this.subjects.get(nodeId);
         if (subject) {
-          console.log(`Setting up event stream for ${node.data.name}`);
+          logger.log(`Setting up event stream for ${node.data.name}`);
+
           const subscription = interval(node.data.frequency).subscribe(
             (value) => {
-              console.log(`[${node.data.name}] Emitting:`, value);
+              logger.log(`[${node.data.name}] Emitting:`, { value });
               subject.next(value);
             },
           );
@@ -116,7 +118,7 @@ export class RXRuntime {
           observable = sourceSubject.pipe(
             delay(sourceNode.data.delay),
             tap((value) => {
-              console.log(`[${sourceNode.data.name}] Processing:`, value);
+              logger.log(`[${sourceNode.data.name}] Processing:`, { value });
             }),
           );
           break;
@@ -125,7 +127,7 @@ export class RXRuntime {
           observable = sourceSubject.pipe(
             bufferCount(sourceNode.data.size),
             tap((values) => {
-              console.log(`[${sourceNode.data.name}] Batching:`, values);
+              logger.log(`[${sourceNode.data.name}] Batching:`, { values });
             }),
           );
           break;
@@ -137,13 +139,15 @@ export class RXRuntime {
       const subscription = observable.subscribe({
         next: (value) => {
           if (targetNode.type === NodeType.Output) {
-            console.log(`[${targetNode.data.name}] Output:`, value);
+            logger.log(`[${targetNode.data.name}] Output:`, { value });
           }
           targetSubject.next(value);
         },
-        error: (err) => {
-          console.error(`Error in node ${sourceNode.data.name}:`, err);
-          targetSubject.error(err);
+        error: (error) => {
+          logger.error(`Error in node ${sourceNode.data.name}`, {
+            error,
+          });
+          targetSubject.error(error);
         },
       });
 
@@ -167,9 +171,9 @@ export class RXRuntime {
    */
   public start() {
     if (!this.isRunning) {
-      console.log("Starting flow...");
       this.initializeRuntime();
       this.setIsRunning(true);
+      logger.log("Event simulation started");
     }
   }
 
@@ -179,9 +183,9 @@ export class RXRuntime {
    */
   public stop() {
     if (this.isRunning) {
-      console.log("Stopping flow...");
       this.clearSubscriptions();
       this.setIsRunning(false);
+      logger.log("Event simulation stopped");
     }
   }
 
@@ -191,10 +195,10 @@ export class RXRuntime {
    * @returns {void}
    */
   public reset() {
-    console.log("Resetting flow...");
     this.stop();
     this.subjects.forEach((subject) => subject.complete());
     this.setupSubjects();
+    logger.log("Runtime reset");
   }
 
   /**
