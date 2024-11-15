@@ -7,6 +7,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { CustomEvents } from "@/lib/constants/custom-events";
 import { cn } from "@/lib/utils/class";
 import { Handle, type NodeProps, Position } from "@xyflow/react";
 
@@ -62,7 +63,7 @@ export const Base = ({
    */
   const handleDelete = () => {
     // Dispatch a custom event to delete the node
-    const event = new CustomEvent("deleteNode", {
+    const event = new CustomEvent(CustomEvents.DeleteNode, {
       detail: { nodeId: props.id },
     });
     window.dispatchEvent(event);
@@ -73,7 +74,7 @@ export const Base = ({
    * @returns void
    */
   const handleRemoveConnections = () => {
-    const event = new CustomEvent("removeConnections", {
+    const event = new CustomEvent(CustomEvents.RemoveConnections, {
       detail: { nodeId: props.id },
     });
     window.dispatchEvent(event);

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
+import { CustomEvents } from "@/lib/constants/custom-events";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { truncateString } from "@/lib/utils/truncate";
@@ -17,16 +18,13 @@ import { useCallback, useEffect, useState } from "react";
 import { Kbd } from "./ui/kbd";
 import { ScrollArea } from "./ui/scroll-area";
 
-// Custom event name for focusing
-const FOCUS_NODE_EVENT = "focusNode";
-
 /**
  * Dispatch a custom event to focus a node
  * @param nodeId
  * @returns void
  */
 export const dispatchFocusNodeEvent = (nodeId: string) => {
-  const event = new CustomEvent(FOCUS_NODE_EVENT, { detail: { nodeId } });
+  const event = new CustomEvent(CustomEvents.FocusNode, { detail: { nodeId } });
   window.dispatchEvent(event);
 };
 

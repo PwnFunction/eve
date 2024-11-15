@@ -1,4 +1,5 @@
 import { useSelection } from "@/hooks/use-selection";
+import { CustomEvents } from "@/lib/constants/custom-events";
 import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { useState } from "react";
@@ -33,7 +34,7 @@ export const Explorer = () => {
     clearSelection();
 
     // Create a custom event to communicate with the Canvas component
-    const event = new CustomEvent("createNode", {
+    const event = new CustomEvent(CustomEvents.CreateNode, {
       detail: {
         type: nodeType,
       },
@@ -76,12 +77,18 @@ export const Explorer = () => {
           ))}
         </div>
       ) : (
-        <div className="flex-1 p-2 font-mono text-neutral-500">
-          <pre>
-            {`[2021-09-02T15:00:00Z] INFO: Created Event Stream\n[2021-09-02T15:00:01Z] INFO: Created Generic Node`}
-          </pre>
-        </div>
+        <Logs />
       )}
     </section>
+  );
+};
+
+const Logs = () => {
+  return (
+    <div className="flex-1 p-2 font-mono text-neutral-500">
+      <pre>
+        {`[2021-09-02T15:00:00Z] INFO: Created Event Stream\n[2021-09-02T15:00:01Z] INFO: Created Generic Node`}
+      </pre>
+    </div>
   );
 };
