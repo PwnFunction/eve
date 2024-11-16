@@ -3,7 +3,7 @@ import { type NodeProps } from "@xyflow/react";
 import { Base } from "./base";
 
 export interface ProcessProps extends NodeProps {
-  data: { name: string; delay: number };
+  data: { name: string; time: number };
 }
 
 /**

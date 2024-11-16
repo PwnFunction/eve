@@ -17,7 +17,7 @@ export const defaultNodePrefs = {
   },
   Process: {
     name: "Process",
-    delay: 1000,
+    time: 1000,
   },
   Output: {
     name: "Output",

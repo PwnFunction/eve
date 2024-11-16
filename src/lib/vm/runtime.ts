@@ -116,7 +116,7 @@ export class RXRuntime {
       switch (sourceNode.type) {
         case NodeType.Process:
           observable = sourceSubject.pipe(
-            delay(sourceNode.data.delay),
+            delay(sourceNode.data.time),
             tap((value) => {
               logger.log(`[${sourceNode.data.name}] Processing:`, { value });
             }),

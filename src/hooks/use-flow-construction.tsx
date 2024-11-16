@@ -36,7 +36,7 @@ const areNodesEqual = (prevNodes: Node[], newNodes: Node[]) => {
         );
 
       case "Process":
-        return prevData.delay === newData.delay;
+        return prevData.time === newData.time;
 
       case "Batch":
         return prevData.size === newData.size;

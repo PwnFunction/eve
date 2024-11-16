@@ -60,3 +60,6 @@
 - [ ] collapisble grid segments such that canvas can be full screen
 - [ ] cta to create nodes maybe in layers?
 - [ ] delete middle node preference in global setting
+- [ ] filter based on log levels
+- [ ] move debug mode from inspector to global settings
+- [ ] debug logs disabled when debug mode is off
