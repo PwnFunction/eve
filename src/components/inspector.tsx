@@ -16,7 +16,6 @@ import { useCallback } from "react";
 import { Input } from "./ui/input";
 import { Kbd } from "./ui/kbd";
 import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
 
 /**
  * Inspector component for displaying node and edge properties
@@ -30,22 +29,17 @@ export const Inspector = () => {
   );
 
   const debug = useDebugStore((state) => state.debug);
-  const setDebug = useDebugStore((state) => state.setDebug);
 
   return (
     <aside className="border-l border-neutral-200" style={styles.rightPanel}>
       <div className="flex w-full items-center justify-between border-b px-2">
-        <div className="w-fit select-none space-x-2 font-medium">
+        <div className="w-fit select-none space-x-2 py-2 font-medium">
           <span>Inspector</span>
           {debug && (
             <Kbd>
               <span className="text-neutral-500">read only</span>
             </Kbd>
           )}
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-neutral-500">Debug mode</span>
-          <Switch className="m-2" checked={debug} onCheckedChange={setDebug} />
         </div>
       </div>
 
