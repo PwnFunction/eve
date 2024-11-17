@@ -6,7 +6,6 @@ export interface EventStreamProps extends NodeProps {
   data: {
     name: string;
     frequency: number;
-    unit: string;
     throttle: boolean;
   };
 }

@@ -8,7 +8,6 @@ export const defaultNodePrefs = {
   EventStream: {
     name: "Event Stream",
     frequency: 1000,
-    unit: "events",
     throttle: false,
   },
   Batch: {
