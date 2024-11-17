@@ -1,7 +1,3 @@
-- [ ] multi selection inspector
-  - [ ] from layers
-    - [x] one by one with ctrl/cmd
-    - [ ] all with shift
 - [ ] add a node with shortcut
 - [ ] select all nodes with shortcut
 - [ ] undo / redo
@@ -63,3 +59,4 @@
 - [ ] filter based on log levels
 - [ ] move debug mode from inspector to global settings
 - [ ] debug logs disabled when debug mode is off
+- [ ] split block (split based on percentages)

@@ -13,14 +13,14 @@ import { styles } from "@/lib/styles/layout";
 import { cn } from "@/lib/utils/class";
 import { truncateString } from "@/lib/utils/truncate";
 import { useNodes, useReactFlow } from "@xyflow/react";
-import { Trash, X } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Kbd } from "./ui/kbd";
 import { ScrollArea } from "./ui/scroll-area";
 
 /**
- * Dispatch a custom event to focus a node
- * @param nodeId
+ * Dispatch focus node event
+ * @param {string} nodeId
  * @returns void
  */
 export const dispatchFocusNodeEvent = (nodeId: string) => {
@@ -33,31 +33,32 @@ export const dispatchFocusNodeEvent = (nodeId: string) => {
  * @returns JSX.Element
  */
 export const Layers = () => {
+  const nodes = useNodes();
+  const { deleteElements } = useReactFlow();
   const { selectedNodes, selectedEdges, selectNodes, clearSelection } =
     useSelection();
   const { selectedNodeElements } = useSelectedElements(
     selectedNodes,
     selectedEdges,
   );
-
-  const nodes = useNodes();
-  const { deleteElements } = useReactFlow();
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
+  const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
+  const [isCommandPressed, setIsCommandPressed] = useState(false);
 
   /**
-   * Delete a node and its connected edges
-   * @param nodeId
+   * Handle delete node
+   * @param {string} nodeId
+   * @param {React.MouseEvent} e
    * @returns void
    */
   const handleNodeDelete = useCallback(
-    (nodeId: string) => {
-      // Find the node to delete
+    (nodeId: string, e: React.MouseEvent) => {
+      e.stopPropagation();
       const nodeToDelete = nodes.find((node) => node.id === nodeId);
       if (!nodeToDelete) return;
 
-      // Delete the node and its connected edges
       deleteElements({ nodes: [nodeToDelete], edges: [] });
 
-      // If the deleted node was selected, clear it from selection
       if (selectedNodes.includes(nodeId)) {
         const newSelection = selectedNodes.filter((id) => id !== nodeId);
         selectNodes(newSelection, false);
@@ -66,17 +67,93 @@ export const Layers = () => {
     [nodes, deleteElements, selectedNodes, selectNodes],
   );
 
-  // Track shift key state
-  const [isShiftPressed, setIsShiftPressed] = useState(false);
+  /**
+   * Handle delete selected nodes
+   * @param {React.MouseEvent} e
+   * @returns void
+   */
+  const handleDeleteSelected = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const nodesToDelete = nodes.filter((node) =>
+        selectedNodes.includes(node.id),
+      );
+      if (nodesToDelete.length === 0) return;
 
-  // Listen for shift key press
+      deleteElements({ nodes: nodesToDelete, edges: [] });
+      clearSelection();
+    },
+    [nodes, selectedNodes, deleteElements, clearSelection],
+  );
+
+  /**
+   * Handle click on a node to select it
+   * @param {string} nodeId
+   * @param {number} index
+   * @param {React.MouseEvent} e
+   * @returns void
+   */
+  const handleNodeClick = useCallback(
+    (nodeId: string, index: number, e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      if (isShiftPressed && lastClickedIndex !== null) {
+        const start = Math.min(lastClickedIndex, index);
+        const end = Math.max(lastClickedIndex, index);
+        const rangeNodeIds = nodes.slice(start, end + 1).map((node) => node.id);
+
+        if (isCommandPressed) {
+          const existingSelection = new Set(selectedNodes);
+          rangeNodeIds.forEach((id) => existingSelection.add(id));
+          selectNodes(Array.from(existingSelection), false);
+        } else {
+          selectNodes(rangeNodeIds, false);
+        }
+      } else {
+        selectNodes([nodeId], isCommandPressed);
+        setLastClickedIndex(index);
+      }
+    },
+    [
+      selectNodes,
+      isCommandPressed,
+      isShiftPressed,
+      lastClickedIndex,
+      nodes,
+      selectedNodes,
+    ],
+  );
+
+  /**
+   * Handle click on the panel to clear selection
+   * @param {React.MouseEvent} e
+   * @returns void
+   */
+  const handlePanelClick = useCallback(
+    (e: React.MouseEvent) => {
+      // Check if we clicked directly on the ScrollArea or aside
+      const target = e.target as HTMLElement;
+      if (
+        target.classList.contains("layers-panel") ||
+        target.classList.contains("scroll-area-wrapper")
+      ) {
+        clearSelection();
+        setLastClickedIndex(null);
+      }
+    },
+    [clearSelection],
+  );
+
+  // Listen for command and shift key presses
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey) setIsShiftPressed(true);
+      if (e.metaKey || e.ctrlKey) setIsCommandPressed(true);
+      if (e.shiftKey) setIsShiftPressed(true);
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (!e.metaKey && !e.ctrlKey) setIsShiftPressed(false);
+      if (!e.metaKey && !e.ctrlKey) setIsCommandPressed(false);
+      if (!e.shiftKey) setIsShiftPressed(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -88,24 +165,16 @@ export const Layers = () => {
     };
   }, []);
 
-  /**
-   * Handle node click event
-   * @param nodeId
-   * @returns void
-   */
-  const handleNodeClick = useCallback(
-    (nodeId: string) => {
-      selectNodes([nodeId], isShiftPressed);
-    },
-    [selectNodes, isShiftPressed],
-  );
-
   return (
     <aside
-      className="space-y-2 border-r border-neutral-200"
+      className="layers-panel space-y-2 border-r border-neutral-200"
       style={styles.leftPanel}
+      onClick={handlePanelClick}
     >
-      <div className="flex w-full items-center justify-between border-b px-2 py-2">
+      <div
+        className="flex w-full items-center justify-between border-b px-2 py-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="w-fit select-none space-x-2 font-medium">
           <span>Layers</span>
           {selectedNodes.length > 0 && (
@@ -120,29 +189,31 @@ export const Layers = () => {
             <Tooltip delayDuration={0}>
               <TooltipTrigger>
                 <button
-                  className="text-neutral-500 hover:text-neutral-600"
-                  onClick={clearSelection}
+                  className="text-neutral-500 hover:text-red-500"
+                  onClick={handleDeleteSelected}
                 >
-                  <X size={12} />
+                  <Trash size={14} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Clear selection</TooltipContent>
+              <TooltipContent>Delete selected</TooltipContent>
             </Tooltip>
           )}
         </TooltipProvider>
       </div>
 
-      <ScrollArea className="!mt-0 h-[95.5%]">
-        {nodes.map((node) => (
-          <LayerItem
-            key={node.id}
-            node={node}
-            selected={selectedNodeElements.includes(node)}
-            selectOnClick={() => handleNodeClick(node.id)}
-            deleteOnClick={() => handleNodeDelete(node.id)}
-          />
-        ))}
-      </ScrollArea>
+      <div className="scroll-area-wrapper !mt-0 h-[95.5%]">
+        <ScrollArea>
+          {nodes.map((node, index) => (
+            <LayerItem
+              key={node.id}
+              node={node}
+              selected={selectedNodeElements.includes(node)}
+              selectOnClick={(e) => handleNodeClick(node.id, index, e)}
+              deleteOnClick={(e) => handleNodeDelete(node.id, e)}
+            />
+          ))}
+        </ScrollArea>
+      </div>
     </aside>
   );
 };
@@ -163,15 +234,14 @@ const LayerItem = ({
 }: {
   node: any;
   selected: boolean;
-  selectOnClick: () => void;
-  deleteOnClick: () => void;
+  selectOnClick: (e: React.MouseEvent) => void;
+  deleteOnClick: (e: React.MouseEvent) => void;
 }) => {
   const name = node.data?.name || node.type;
 
   /**
-   * Handle double click event
-   * Focus the node
-   * @param e
+   * Handle double click on a node to focus it
+   * @param {React.MouseEvent} e
    * @returns void
    */
   const handleDoubleClick = useCallback(
@@ -189,6 +259,7 @@ const LayerItem = ({
         "group flex cursor-pointer select-none items-center justify-between hover:bg-neutral-50",
         selected && "bg-neutral-100",
       )}
+      onClick={(e) => e.stopPropagation()}
     >
       <span
         className="flex-1 px-2 py-1"
