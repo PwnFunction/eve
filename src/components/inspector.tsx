@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/select";
 import { useSelectedElements } from "@/hooks/use-selected-elements";
 import { useSelection } from "@/hooks/use-selection";
+import { useDebugStore } from "@/lib/store/debug";
 import { styles } from "@/lib/styles/layout";
 import { useReactFlow, type Edge, type Node } from "@xyflow/react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Input } from "./ui/input";
 import { Kbd } from "./ui/kbd";
 import { Label } from "./ui/label";
@@ -28,7 +29,8 @@ export const Inspector = () => {
     selectedEdges,
   );
 
-  const [debug, setDebugMode] = useState(false);
+  const debug = useDebugStore((state) => state.debug);
+  const setDebug = useDebugStore((state) => state.setDebug);
 
   return (
     <aside className="border-l border-neutral-200" style={styles.rightPanel}>
@@ -43,11 +45,7 @@ export const Inspector = () => {
         </div>
         <div className="flex items-center space-x-2">
           <span className="text-neutral-500">Debug mode</span>
-          <Switch
-            className="m-2"
-            checked={debug}
-            onCheckedChange={setDebugMode}
-          />
+          <Switch className="m-2" checked={debug} onCheckedChange={setDebug} />
         </div>
       </div>
 
