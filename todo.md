@@ -60,3 +60,4 @@
 - [ ] move debug mode from inspector to global settings
 - [ ] debug logs disabled when debug mode is off
 - [ ] split block (split based on percentages)
+- [ ] add queue block
